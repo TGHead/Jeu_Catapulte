@@ -1,7 +1,6 @@
 #include "catapulte.h"
 #include "ui_catapulte.h"
 #include <QGraphicsView>
-#include <QTimer>
 
 #include <QDebug>
 
@@ -19,16 +18,20 @@ Catapulte::Catapulte(QWidget *parent) :
 
     ui->s_runtime_->setVisible(false);
     ui->s_target_time_->setVisible(false);
+    ui->s_target_left_->setVisible(false);
     ui->s_scores_->setVisible(false);
 
     ui->v_runtime_->setVisible(false);
     ui->v_target_time_->setVisible(false);
+    ui->v_target_left_->setVisible(false);
     ui->v_scores_->setVisible(false);
 
     resize(width(), ui->SceneGL_->minimumHeight());
 
     capturing_ = false;
     f_timer_ = new QTimer(this);
+    g_timer_ = new QTimer(this);
+    t_timer_ = new QTimer(this);
 
     webCam_=new VideoCapture(0);
     int w=webCam_->get(CV_CAP_PROP_FRAME_WIDTH);
@@ -43,7 +46,7 @@ Catapulte::Catapulte(QWidget *parent) :
         ui->Frame_->setText(QString("Video ok, image size is %1x%2 pixels.\n"
                                     "(Click Start to show image)").arg(w).arg(h));
         ui->Start_Button_->setEnabled(true);
-        connect(ui->Start_Button_, SIGNAL(clicked()), this, SLOT(on_Start_Button__clicked()));
+        connect(ui->Start_Button_, SIGNAL(pressed()), this, SLOT(Start_Button__pressed()));
     }
 }
 
@@ -52,9 +55,11 @@ Catapulte::~Catapulte()
     delete ui;
     delete webCam_;
     delete f_timer_;
+    delete g_timer_;
+    delete t_timer_;
 }
 
-void Catapulte::on_Start_Button__clicked()
+void Catapulte::Start_Button__pressed()
 {
 
     ui->Start_Button_->setEnabled(false);
@@ -62,13 +67,13 @@ void Catapulte::on_Start_Button__clicked()
 
     ui->Capture_Button_->setVisible(true);
 
-    connect(ui->Capture_Button_, SIGNAL(clicked()), this, SLOT(on_Capture_Button__clicked()));
+    connect(ui->Capture_Button_, SIGNAL(pressed()), this, SLOT(Capture_Button__pressed()));
 
-    f_timer_->start(20);
     connect(f_timer_, SIGNAL(timeout()),this, SLOT(afficherImage()));
+    f_timer_->start(20);
 }
 
-void Catapulte::on_Capture_Button__clicked()
+void Catapulte::Capture_Button__pressed()
 {
     ui->Capture_Button_->setEnabled(false);
     ui->Capture_Button_->setVisible(false);
@@ -81,13 +86,19 @@ void Catapulte::on_Capture_Button__clicked()
 
     ui->s_runtime_->setVisible(true);
     ui->s_target_time_->setVisible(true);
+    ui->s_target_left_->setVisible(true);
     ui->s_scores_->setVisible(true);
 
     ui->v_runtime_->setVisible(true);
     ui->v_target_time_->setVisible(true);
+    ui->v_target_left_->setVisible(true);
     ui->v_scores_->setVisible(true);
 
     capturing_ = true;
+
+    runtime_ = QTime(0, 0);
+    connect(g_timer_, SIGNAL(timeout()),this, SLOT(afficherGlobalTime()));
+    g_timer_->start(1000);
 }
 
 void Catapulte::afficherImage()
@@ -130,4 +141,10 @@ void Catapulte::afficherImage()
     else {
         ui->Frame_->setText("Error capturing the frame");
     }
+}
+
+void Catapulte::afficherGlobalTime()
+{
+    runtime_ = runtime_.addSecs(1);// +1s
+    ui->v_runtime_->setText(runtime_.toString());
 }

@@ -137,6 +137,16 @@
                  </widget>
                 </item>
                 <item>
+                 <widget class="QLabel" name="s_target_left_">
+                  <property name="text">
+                   <string>Reste Targets:</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QLabel" name="s_scores_">
                   <property name="text">
                    <string>Scores:</string>
@@ -161,6 +171,13 @@
                  <widget class="QLabel" name="v_target_time_">
                   <property name="text">
                    <string>00:00:00</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="v_target_left_">
+                  <property name="text">
+                   <string>10</string>
                   </property>
                  </widget>
                 </item>
