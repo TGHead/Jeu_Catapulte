@@ -5,6 +5,7 @@
 #include <QTime>
 #include <QTimer>
 #include "opencv2/opencv.hpp"
+#include "gameround.h"
 
 using namespace cv;
 
@@ -31,11 +32,18 @@ private:
     bool capturing_;
     Mat templateImage_;
 
+    GameRound *round_;
+
 private slots:
     void Start_Button__clicked();
     void Capture_Button__clicked();
+    void Restart_Button__clicked();
+    void Fire_Button__clicked();
+    void Replay_Button__clicked();
+
     void afficherImage();
     void afficherGlobalTime();
+    void afficherRoundTime();
 };
 
 #endif // CATAPULTE_H

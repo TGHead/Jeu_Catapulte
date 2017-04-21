@@ -55,6 +55,7 @@ Catapulte::~Catapulte()
     delete webCam_;
     delete f_timer_;
     delete g_timer_;
+    delete round_;
 }
 
 void Catapulte::Start_Button__clicked()
@@ -66,8 +67,14 @@ void Catapulte::Start_Button__clicked()
     ui->Capture_Button_->setVisible(true);
 
     connect(ui->Capture_Button_, SIGNAL(clicked()), this, SLOT(Capture_Button__clicked()));
+    connect(ui->ReStart_Button_, SIGNAL(clicked()), this, SLOT(Restart_Button__clicked()));
+    connect(ui->Fire_Button_, SIGNAL(clicked()), this, SLOT(Fire_Button__clicked()));
+    connect(ui->Replay_Button_, SIGNAL(clicked()), this, SLOT(Replay_Button__clicked()));
 
     connect(f_timer_, SIGNAL(timeout()),this, SLOT(afficherImage()));
+    connect(g_timer_, SIGNAL(timeout()),this, SLOT(afficherGlobalTime()));
+    connect(g_timer_, SIGNAL(timeout()),this, SLOT(afficherRoundTime()));
+
     f_timer_->start(20);
 }
 
@@ -92,11 +99,56 @@ void Catapulte::Capture_Button__clicked()
     ui->v_target_left_->setVisible(true);
     ui->v_scores_->setVisible(true);
 
+    round_ = new GameRound();
+
     capturing_ = true;
 
     runtime_ = QTime(0, 0);
-    connect(g_timer_, SIGNAL(timeout()),this, SLOT(afficherGlobalTime()));
     g_timer_->start(1000);
+
+    ui->v_target_left_->setText(QString("%1").arg(round_->getR_left()));
+    ui->v_scores_->setText(QString("%1").arg(round_->getSum_Scores()));
+}
+
+void Catapulte::Restart_Button__clicked()
+{
+    ui->Capture_Button_->setEnabled(true);
+    ui->Capture_Button_->setVisible(true);
+
+//    ui->Score_Table_->setVisible(false);
+    ui->ReStart_Button_->setVisible(false);
+    ui->Fire_Button_->setVisible(false);
+    ui->Replay_Button_->setVisible(false);
+
+    ui->s_runtime_->setVisible(false);
+    ui->s_target_time_->setVisible(false);
+    ui->s_target_left_->setVisible(false);
+    ui->s_scores_->setVisible(false);
+
+    ui->v_runtime_->setVisible(false);
+    ui->v_target_time_->setVisible(false);
+    ui->v_target_left_->setVisible(false);
+    ui->v_scores_->setVisible(false);
+
+    resize(width(), minimumHeight());
+
+    capturing_ = false;
+
+    g_timer_->stop();
+}
+
+void Catapulte::Fire_Button__clicked()
+{
+    round_->setR_left(round_->getR_left() - 1);
+    round_->Init_Round_Time();
+
+    ui->v_target_left_->setText(QString("%1").arg(round_->getR_left()));
+    ui->v_scores_->setText(QString("%1").arg(round_->getSum_Scores()));
+}
+
+void Catapulte::Replay_Button__clicked()
+{
+    qDebug()<<"call replay function.";
 }
 
 void Catapulte::afficherImage()
@@ -145,4 +197,10 @@ void Catapulte::afficherGlobalTime()
 {
     runtime_ = runtime_.addSecs(1);// +1s
     ui->v_runtime_->setText(runtime_.toString());
+}
+
+void Catapulte::afficherRoundTime()
+{
+    round_ -> Round_Time_add1s();
+    ui->v_target_time_->setText(round_->getRound_Time().toString());
 }

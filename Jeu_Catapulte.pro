@@ -24,9 +24,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        catapulte.cpp
+        catapulte.cpp \
+    gameround.cpp
 
-HEADERS  += catapulte.h
+HEADERS  += catapulte.h \
+    gameround.h
 
 FORMS    += catapulte.ui
 
