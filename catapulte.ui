@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>852</width>
-    <height>502</height>
+    <height>696</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -62,7 +62,7 @@
           <item>
            <widget class="QPushButton" name="Start_Button_">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="layoutDirection">
              <enum>Qt::LeftToRight</enum>
@@ -78,6 +78,13 @@
           <item>
            <layout class="QVBoxLayout" name="Vlayout3_">
             <item>
+             <widget class="QPushButton" name="Capture_Button_">
+              <property name="text">
+               <string>Capture</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="ReStart_Button_">
               <property name="text">
                <string>ReStart</string>
@@ -85,11 +92,25 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="Capture_Button_">
-              <property name="text">
-               <string>Capture</string>
+             <layout class="QHBoxLayout" name="Hlayout3_">
+              <property name="spacing">
+               <number>0</number>
               </property>
-             </widget>
+              <item>
+               <widget class="QPushButton" name="Fire_Button_">
+                <property name="text">
+                 <string>Fire!!</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="Replay_Button_">
+                <property name="text">
+                 <string>Replay</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <layout class="QHBoxLayout" name="Hlayout2_">
