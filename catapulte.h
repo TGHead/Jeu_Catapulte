@@ -28,13 +28,12 @@ private:
     QTime runtime_;
     QTimer *f_timer_;
     QTimer *g_timer_;
-    QTimer *t_timer_;
     bool capturing_;
     Mat templateImage_;
 
 private slots:
-    void Start_Button__pressed();
-    void Capture_Button__pressed();
+    void Start_Button__clicked();
+    void Capture_Button__clicked();
     void afficherImage();
     void afficherGlobalTime();
 };

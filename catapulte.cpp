@@ -31,7 +31,6 @@ Catapulte::Catapulte(QWidget *parent) :
     capturing_ = false;
     f_timer_ = new QTimer(this);
     g_timer_ = new QTimer(this);
-    t_timer_ = new QTimer(this);
 
     webCam_=new VideoCapture(0);
     int w=webCam_->get(CV_CAP_PROP_FRAME_WIDTH);
@@ -46,7 +45,7 @@ Catapulte::Catapulte(QWidget *parent) :
         ui->Frame_->setText(QString("Video ok, image size is %1x%2 pixels.\n"
                                     "(Click Start to show image)").arg(w).arg(h));
         ui->Start_Button_->setEnabled(true);
-        connect(ui->Start_Button_, SIGNAL(pressed()), this, SLOT(Start_Button__pressed()));
+        connect(ui->Start_Button_, SIGNAL(clicked()), this, SLOT(Start_Button__clicked()));
     }
 }
 
@@ -56,10 +55,9 @@ Catapulte::~Catapulte()
     delete webCam_;
     delete f_timer_;
     delete g_timer_;
-    delete t_timer_;
 }
 
-void Catapulte::Start_Button__pressed()
+void Catapulte::Start_Button__clicked()
 {
 
     ui->Start_Button_->setEnabled(false);
@@ -67,13 +65,13 @@ void Catapulte::Start_Button__pressed()
 
     ui->Capture_Button_->setVisible(true);
 
-    connect(ui->Capture_Button_, SIGNAL(pressed()), this, SLOT(Capture_Button__pressed()));
+    connect(ui->Capture_Button_, SIGNAL(clicked()), this, SLOT(Capture_Button__clicked()));
 
     connect(f_timer_, SIGNAL(timeout()),this, SLOT(afficherImage()));
     f_timer_->start(20);
 }
 
-void Catapulte::Capture_Button__pressed()
+void Catapulte::Capture_Button__clicked()
 {
     ui->Capture_Button_->setEnabled(false);
     ui->Capture_Button_->setVisible(false);
