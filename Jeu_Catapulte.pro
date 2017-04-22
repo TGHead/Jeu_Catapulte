@@ -25,12 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         catapulte.cpp \
-    gameround.cpp
+    gameround.cpp \
+    gamesetting.cpp
 
 HEADERS  += catapulte.h \
-    gameround.h
+    gameround.h \
+    gamesetting.h \
+    enum_level.h
 
-FORMS    += catapulte.ui
+FORMS    += catapulte.ui \
+    gamesetting.ui
 
 INCLUDEPATH +=$$(OPENCV_DIR)\..\..\include
 

@@ -9,6 +9,7 @@ GameRound::GameRound()
         scores_[i] = 0;
     }
     Init_Round_Time();
+    player_name_ = "Null";
 }
 
 GameRound::~GameRound()

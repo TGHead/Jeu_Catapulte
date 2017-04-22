@@ -1,6 +1,7 @@
 #ifndef GAMEROUND_H
 #define GAMEROUND_H
 
+#include "enum_level.h"
 #include <QTime>
 
 class GameRound
@@ -8,18 +9,14 @@ class GameRound
 
 private:
 
-    enum LEVEL
-    {
-        EASY,
-        NORMAL,
-        HARD
-    } level_;
-
+    LEVEL level_;
     int r_left_;
     int scores_[10];
     QTime round_time_;
+    QString player_name_;
 
 public:
+
     explicit GameRound();
     ~GameRound();
     void setLevel(LEVEL level);

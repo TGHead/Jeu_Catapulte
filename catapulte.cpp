@@ -1,5 +1,7 @@
 #include "catapulte.h"
 #include "ui_catapulte.h"
+#include "gamesetting.h"
+
 #include <QGraphicsView>
 
 #include <QDebug>
@@ -31,6 +33,7 @@ Catapulte::Catapulte(QWidget *parent) :
     capturing_ = false;
     f_timer_ = new QTimer(this);
     g_timer_ = new QTimer(this);
+    round_ = NULL;
 
     webCam_=new VideoCapture(0);
     int w=webCam_->get(CV_CAP_PROP_FRAME_WIDTH);
@@ -55,11 +58,14 @@ Catapulte::~Catapulte()
     delete webCam_;
     delete f_timer_;
     delete g_timer_;
-    delete round_;
+    if(round_ != NULL)
+        delete round_;
 }
 
 void Catapulte::Start_Button__clicked()
 {
+    GameSetting setting(this);
+    setting.exec();
 
     ui->Start_Button_->setEnabled(false);
     ui->Start_Button_->setVisible(false);
@@ -112,6 +118,9 @@ void Catapulte::Capture_Button__clicked()
 
 void Catapulte::Restart_Button__clicked()
 {
+    GameSetting setting(this);
+    setting.exec();
+
     ui->Capture_Button_->setEnabled(true);
     ui->Capture_Button_->setVisible(true);
 
