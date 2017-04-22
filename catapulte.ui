@@ -92,14 +92,21 @@
              </widget>
             </item>
             <item>
+             <widget class="QPushButton" name="Fire_Button_">
+              <property name="text">
+               <string>Fire!!</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <layout class="QHBoxLayout" name="Hlayout3_">
               <property name="spacing">
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="Fire_Button_">
+               <widget class="QPushButton" name="Next_Button_">
                 <property name="text">
-                 <string>Fire!!</string>
+                 <string>Next Target</string>
                 </property>
                </widget>
               </item>

@@ -42,6 +42,7 @@ private slots:
     void Capture_Button__clicked();
     void Restart_Button__clicked();
     void Fire_Button__clicked();
+    void Next_Button__clicked();
     void Replay_Button__clicked();
 
     void GameSetting_Accepted();

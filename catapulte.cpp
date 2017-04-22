@@ -15,6 +15,7 @@ Catapulte::Catapulte(QWidget *parent) :
     ui->ReStart_Button_->setVisible(false);
     ui->Capture_Button_->setVisible(false);
     ui->Fire_Button_->setVisible(false);
+    ui->Next_Button_->setVisible(false);
     ui->Replay_Button_->setVisible(false);
 
     ui->s_player_name_->setVisible(false);
@@ -87,6 +88,7 @@ void Catapulte::Start_Button__clicked()
         connect(ui->Capture_Button_, SIGNAL(clicked()), this, SLOT(Capture_Button__clicked()));
         connect(ui->ReStart_Button_, SIGNAL(clicked()), this, SLOT(Restart_Button__clicked()));
         connect(ui->Fire_Button_, SIGNAL(clicked()), this, SLOT(Fire_Button__clicked()));
+        connect(ui->Next_Button_, SIGNAL(clicked()), this, SLOT(Next_Button__clicked()));
         connect(ui->Replay_Button_, SIGNAL(clicked()), this, SLOT(Replay_Button__clicked()));
 
         connect(f_timer_, SIGNAL(timeout()),this, SLOT(afficherImage()));
@@ -105,10 +107,9 @@ void Catapulte::Capture_Button__clicked()
     ui->Capture_Button_->setVisible(false);
 
     ui->Score_Table_->setVisible(true);
-    ui->ReStart_Button_->setVisible(true);
 
+    ui->ReStart_Button_->setVisible(true);
     ui->Fire_Button_->setVisible(true);
-    ui->Replay_Button_->setVisible(true);
 
     ui->s_player_name_->setVisible(true);
     ui->s_level_->setVisible(true);
@@ -142,6 +143,7 @@ void Catapulte::Capture_Button__clicked()
 
 void Catapulte::Restart_Button__clicked()
 {
+
     delete setting_;
     setting_ = new GameSetting(this);
     connect(setting_->getButtonBox(),SIGNAL(accepted()),this,SLOT(GameSetting_Accepted()));
@@ -150,12 +152,17 @@ void Catapulte::Restart_Button__clicked()
 
     if(started_ == true)
     {
+        ui->Score_Table_->clearContents();
+        ui->Score_Table_->setRowCount(0);
+
         ui->Capture_Button_->setEnabled(true);
         ui->Capture_Button_->setVisible(true);
 
     //    ui->Score_Table_->setVisible(false);
         ui->ReStart_Button_->setVisible(false);
         ui->Fire_Button_->setVisible(false);
+
+        ui->Next_Button_->setVisible(false);
         ui->Replay_Button_->setVisible(false);
 
         ui->s_player_name_->setVisible(false);
@@ -185,6 +192,9 @@ void Catapulte::Restart_Button__clicked()
 void Catapulte::Fire_Button__clicked()
 {
 //    qDebug()<<ui->Score_Table_->rowCount();
+    ui->Fire_Button_->setVisible(false);
+    ui->Next_Button_->setVisible(true);
+    ui->Replay_Button_->setVisible(true);
 
     ui->Score_Table_->setRowCount(10 - round_->getR_left() + 1);
     ui->Score_Table_->setItem(10 - round_->getR_left(), 0, new QTableWidgetItem(QString("%1").arg(10 - round_->getR_left() + 1)));
@@ -204,6 +214,19 @@ void Catapulte::Fire_Button__clicked()
     ui->v_target_time_->setText(round_->getRound_Time().toString());
     ui->v_target_left_->setText(QString("%1").arg(round_->getR_left()));
     ui->v_scores_->setText(QString("%1").arg(round_->getSum_Scores()));
+
+    if(round_->getR_left() == 0)
+    {
+        g_timer_->stop();
+        ui->Fire_Button_->setEnabled(false);
+    }
+}
+
+void Catapulte::Next_Button__clicked()
+{
+    ui->Fire_Button_->setVisible(true);
+    ui->Next_Button_->setVisible(false);
+    ui->Replay_Button_->setVisible(false);
 }
 
 void Catapulte::Replay_Button__clicked()
