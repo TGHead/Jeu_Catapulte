@@ -1,6 +1,5 @@
 #include "catapulte.h"
 #include "ui_catapulte.h"
-#include "gamesetting.h"
 
 #include <QGraphicsView>
 
@@ -18,11 +17,15 @@ Catapulte::Catapulte(QWidget *parent) :
     ui->Fire_Button_->setVisible(false);
     ui->Replay_Button_->setVisible(false);
 
+    ui->s_player_name_->setVisible(false);
+    ui->s_level_->setVisible(false);
     ui->s_runtime_->setVisible(false);
     ui->s_target_time_->setVisible(false);
     ui->s_target_left_->setVisible(false);
     ui->s_scores_->setVisible(false);
 
+    ui->v_player_name_->setVisible(false);
+    ui->v_level_->setVisible(false);
     ui->v_runtime_->setVisible(false);
     ui->v_target_time_->setVisible(false);
     ui->v_target_left_->setVisible(false);
@@ -91,6 +94,8 @@ void Catapulte::Start_Button__clicked()
         connect(g_timer_, SIGNAL(timeout()),this, SLOT(afficherRoundTime()));
 
         f_timer_->start(20);
+
+        started_ = false;
     }
 }
 
@@ -105,15 +110,22 @@ void Catapulte::Capture_Button__clicked()
     ui->Fire_Button_->setVisible(true);
     ui->Replay_Button_->setVisible(true);
 
+    ui->s_player_name_->setVisible(true);
+    ui->s_level_->setVisible(true);
     ui->s_runtime_->setVisible(true);
     ui->s_target_time_->setVisible(true);
     ui->s_target_left_->setVisible(true);
     ui->s_scores_->setVisible(true);
 
+    ui->v_player_name_->setVisible(true);
+    ui->v_level_->setVisible(true);
     ui->v_runtime_->setVisible(true);
     ui->v_target_time_->setVisible(true);
     ui->v_target_left_->setVisible(true);
     ui->v_scores_->setVisible(true);
+
+    if(round_ != NULL)
+        delete round_;
 
     round_ = new GameRound(setting_->getLevel(), setting_->getPlayerName());
 
@@ -122,6 +134,8 @@ void Catapulte::Capture_Button__clicked()
     runtime_ = QTime(0, 0);
     g_timer_->start(1000);
 
+    ui->v_player_name_->setText(round_->getPlayerName());
+    ui->v_level_->setText(round_->getLevelText());
     ui->v_target_left_->setText(QString("%1").arg(round_->getR_left()));
     ui->v_scores_->setText(QString("%1").arg(round_->getSum_Scores()));
 }
@@ -144,21 +158,27 @@ void Catapulte::Restart_Button__clicked()
         ui->Fire_Button_->setVisible(false);
         ui->Replay_Button_->setVisible(false);
 
+        ui->s_player_name_->setVisible(false);
+        ui->s_level_->setVisible(false);
         ui->s_runtime_->setVisible(false);
         ui->s_target_time_->setVisible(false);
         ui->s_target_left_->setVisible(false);
         ui->s_scores_->setVisible(false);
 
+        ui->v_player_name_->setVisible(false);
+        ui->v_level_->setVisible(false);
         ui->v_runtime_->setVisible(false);
         ui->v_target_time_->setVisible(false);
         ui->v_target_left_->setVisible(false);
         ui->v_scores_->setVisible(false);
 
-        resize(width(), minimumHeight());
+        resize(width(), minimumHeight());//?ISSUE 1 (Resize mainwindow failed when restart)?
 
         captured_ = false;
 
         g_timer_->stop();
+
+        started_ = false;
     }
 }
 

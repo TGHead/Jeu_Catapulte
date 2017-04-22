@@ -39,6 +39,11 @@ LEVEL GameSetting::getLevel()
     }
 }
 
+QString GameSetting::getLevelText()
+{
+    return ui->lvlselect_->currentText();
+}
+
 QDialogButtonBox* GameSetting::getButtonBox()
 {
     return ui->buttonBox_;

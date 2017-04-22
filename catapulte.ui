@@ -117,6 +117,26 @@
               <item>
                <layout class="QVBoxLayout" name="Vlayout4_">
                 <item>
+                 <widget class="QLabel" name="s_player_name_">
+                  <property name="text">
+                   <string>Player:</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="s_level_">
+                  <property name="text">
+                   <string>Level:</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QLabel" name="s_runtime_">
                   <property name="text">
                    <string>Runtime:</string>
@@ -160,6 +180,20 @@
               </item>
               <item>
                <layout class="QVBoxLayout" name="Vlayout5_">
+                <item>
+                 <widget class="QLabel" name="v_player_name_">
+                  <property name="text">
+                   <string>Null</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="v_level_">
+                  <property name="text">
+                   <string>Easy</string>
+                  </property>
+                 </widget>
+                </item>
                 <item>
                  <widget class="QLabel" name="v_runtime_">
                   <property name="text">

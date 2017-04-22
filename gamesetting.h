@@ -18,6 +18,7 @@ public:
     ~GameSetting();
     QString getPlayerName();
     LEVEL getLevel();
+    QString getLevelText();
     QDialogButtonBox* getButtonBox();
 
 private:

@@ -22,11 +22,14 @@ public:
     void setLevel(LEVEL level);
     void setR_left(int r_left);
     void setScores(int N, int score);
+    void setPlayerName(QString player_name);
 
     void Init_Round_Time();
     void Round_Time_add1s();
 
     LEVEL getLevel() { return level_; }
+    QString getLevelText();
+    QString getPlayerName() { return player_name_; }
     int getR_left() { return r_left_; }
     int getScores(int N) { return scores_[N]; }
     int getSum_Scores();
