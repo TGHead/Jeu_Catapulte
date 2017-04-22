@@ -184,6 +184,20 @@ void Catapulte::Restart_Button__clicked()
 
 void Catapulte::Fire_Button__clicked()
 {
+//    qDebug()<<ui->Score_Table_->rowCount();
+
+    ui->Score_Table_->setRowCount(10 - round_->getR_left() + 1);
+    ui->Score_Table_->setItem(10 - round_->getR_left(), 0, new QTableWidgetItem(QString("%1").arg(10 - round_->getR_left() + 1)));
+    ui->Score_Table_->setItem(10 - round_->getR_left(), 1, new QTableWidgetItem(round_->getPlayerName()));
+    ui->Score_Table_->setItem(10 - round_->getR_left(), 2, new QTableWidgetItem(ui->v_runtime_->text()));
+    ui->Score_Table_->setItem(10 - round_->getR_left(), 3, new QTableWidgetItem(ui->v_target_time_->text()));
+    ui->Score_Table_->setItem(10 - round_->getR_left(), 4, new QTableWidgetItem(QString("%1").arg(round_->getScores(10 - round_->getR_left()))));
+    for(int i = 0 ; i < 5 ; i++)
+    {
+        QTableWidgetItem *item = ui->Score_Table_->item(10 - round_->getR_left(), i);
+        item -> setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    }
+
     round_->setR_left(round_->getR_left() - 1);
     round_->Init_Round_Time();
 
