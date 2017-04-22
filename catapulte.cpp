@@ -142,6 +142,7 @@ void Catapulte::Fire_Button__clicked()
     round_->setR_left(round_->getR_left() - 1);
     round_->Init_Round_Time();
 
+    ui->v_target_time_->setText(round_->getRound_Time().toString());
     ui->v_target_left_->setText(QString("%1").arg(round_->getR_left()));
     ui->v_scores_->setText(QString("%1").arg(round_->getSum_Scores()));
 }
