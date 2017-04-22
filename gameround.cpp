@@ -1,15 +1,15 @@
 #include "gameround.h"
 
-GameRound::GameRound()
+GameRound::GameRound(LEVEL level, QString player_name)
 {
-    level_ = EASY;
+    level_ = level;
     r_left_ = 10;
     for(int i=0;i<10;i++)
     {
         scores_[i] = 0;
     }
     Init_Round_Time();
-    player_name_ = "Null";
+    player_name_ = player_name;
 }
 
 GameRound::~GameRound()

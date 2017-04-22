@@ -38,3 +38,18 @@ LEVEL GameSetting::getLevel()
         break;
     }
 }
+
+QDialogButtonBox* GameSetting::getButtonBox()
+{
+    return ui->buttonBox_;
+}
+
+//void GameSetting::reject()
+//{
+
+//}
+
+//void GameSetting::accept()
+//{
+
+//}

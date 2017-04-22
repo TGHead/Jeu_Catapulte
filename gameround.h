@@ -17,7 +17,7 @@ private:
 
 public:
 
-    explicit GameRound();
+    explicit GameRound(LEVEL level = EASY, QString player_name = "Null");
     ~GameRound();
     void setLevel(LEVEL level);
     void setR_left(int r_left);

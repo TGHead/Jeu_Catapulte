@@ -3,6 +3,7 @@
 
 #include "enum_level.h"
 #include <QDialog>
+#include <QDialogButtonBox>
 
 namespace Ui {
 class GameSetting;
@@ -17,9 +18,14 @@ public:
     ~GameSetting();
     QString getPlayerName();
     LEVEL getLevel();
+    QDialogButtonBox* getButtonBox();
 
 private:
     Ui::GameSetting *ui;
+
+//private slots:
+//    void reject();
+//    void accept();
 };
 
 #endif // GAMESETTING_H

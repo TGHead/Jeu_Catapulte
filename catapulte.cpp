@@ -30,10 +30,13 @@ Catapulte::Catapulte(QWidget *parent) :
 
     resize(width(), ui->SceneGL_->minimumHeight());
 
-    capturing_ = false;
+    captured_ = false;
+    started_ = false;
+
     f_timer_ = new QTimer(this);
     g_timer_ = new QTimer(this);
     round_ = NULL;
+    setting_ = NULL;
 
     webCam_=new VideoCapture(0);
     int w=webCam_->get(CV_CAP_PROP_FRAME_WIDTH);
@@ -60,28 +63,35 @@ Catapulte::~Catapulte()
     delete g_timer_;
     if(round_ != NULL)
         delete round_;
+    if(setting_ != NULL)
+        delete setting_;
 }
 
 void Catapulte::Start_Button__clicked()
 {
-    GameSetting setting(this);
-    setting.exec();
+    setting_ = new GameSetting(this);
+    connect(setting_->getButtonBox(),SIGNAL(accepted()),this,SLOT(GameSetting_Accepted()));
+    connect(setting_->getButtonBox(),SIGNAL(rejected()),this,SLOT(GameSetting_Rejected()));
+    setting_->exec();
 
-    ui->Start_Button_->setEnabled(false);
-    ui->Start_Button_->setVisible(false);
+    if(started_ == true)
+    {
+        ui->Start_Button_->setEnabled(false);
+        ui->Start_Button_->setVisible(false);
 
-    ui->Capture_Button_->setVisible(true);
+        ui->Capture_Button_->setVisible(true);
 
-    connect(ui->Capture_Button_, SIGNAL(clicked()), this, SLOT(Capture_Button__clicked()));
-    connect(ui->ReStart_Button_, SIGNAL(clicked()), this, SLOT(Restart_Button__clicked()));
-    connect(ui->Fire_Button_, SIGNAL(clicked()), this, SLOT(Fire_Button__clicked()));
-    connect(ui->Replay_Button_, SIGNAL(clicked()), this, SLOT(Replay_Button__clicked()));
+        connect(ui->Capture_Button_, SIGNAL(clicked()), this, SLOT(Capture_Button__clicked()));
+        connect(ui->ReStart_Button_, SIGNAL(clicked()), this, SLOT(Restart_Button__clicked()));
+        connect(ui->Fire_Button_, SIGNAL(clicked()), this, SLOT(Fire_Button__clicked()));
+        connect(ui->Replay_Button_, SIGNAL(clicked()), this, SLOT(Replay_Button__clicked()));
 
-    connect(f_timer_, SIGNAL(timeout()),this, SLOT(afficherImage()));
-    connect(g_timer_, SIGNAL(timeout()),this, SLOT(afficherGlobalTime()));
-    connect(g_timer_, SIGNAL(timeout()),this, SLOT(afficherRoundTime()));
+        connect(f_timer_, SIGNAL(timeout()),this, SLOT(afficherImage()));
+        connect(g_timer_, SIGNAL(timeout()),this, SLOT(afficherGlobalTime()));
+        connect(g_timer_, SIGNAL(timeout()),this, SLOT(afficherRoundTime()));
 
-    f_timer_->start(20);
+        f_timer_->start(20);
+    }
 }
 
 void Catapulte::Capture_Button__clicked()
@@ -105,9 +115,9 @@ void Catapulte::Capture_Button__clicked()
     ui->v_target_left_->setVisible(true);
     ui->v_scores_->setVisible(true);
 
-    round_ = new GameRound();
+    round_ = new GameRound(setting_->getLevel(), setting_->getPlayerName());
 
-    capturing_ = true;
+    captured_ = true;
 
     runtime_ = QTime(0, 0);
     g_timer_->start(1000);
@@ -118,32 +128,38 @@ void Catapulte::Capture_Button__clicked()
 
 void Catapulte::Restart_Button__clicked()
 {
-    GameSetting setting(this);
-    setting.exec();
+    delete setting_;
+    setting_ = new GameSetting(this);
+    connect(setting_->getButtonBox(),SIGNAL(accepted()),this,SLOT(GameSetting_Accepted()));
+    connect(setting_->getButtonBox(),SIGNAL(rejected()),this,SLOT(GameSetting_Rejected()));
+    setting_->exec();
 
-    ui->Capture_Button_->setEnabled(true);
-    ui->Capture_Button_->setVisible(true);
+    if(started_ == true)
+    {
+        ui->Capture_Button_->setEnabled(true);
+        ui->Capture_Button_->setVisible(true);
 
-//    ui->Score_Table_->setVisible(false);
-    ui->ReStart_Button_->setVisible(false);
-    ui->Fire_Button_->setVisible(false);
-    ui->Replay_Button_->setVisible(false);
+    //    ui->Score_Table_->setVisible(false);
+        ui->ReStart_Button_->setVisible(false);
+        ui->Fire_Button_->setVisible(false);
+        ui->Replay_Button_->setVisible(false);
 
-    ui->s_runtime_->setVisible(false);
-    ui->s_target_time_->setVisible(false);
-    ui->s_target_left_->setVisible(false);
-    ui->s_scores_->setVisible(false);
+        ui->s_runtime_->setVisible(false);
+        ui->s_target_time_->setVisible(false);
+        ui->s_target_left_->setVisible(false);
+        ui->s_scores_->setVisible(false);
 
-    ui->v_runtime_->setVisible(false);
-    ui->v_target_time_->setVisible(false);
-    ui->v_target_left_->setVisible(false);
-    ui->v_scores_->setVisible(false);
+        ui->v_runtime_->setVisible(false);
+        ui->v_target_time_->setVisible(false);
+        ui->v_target_left_->setVisible(false);
+        ui->v_scores_->setVisible(false);
 
-    resize(width(), minimumHeight());
+        resize(width(), minimumHeight());
 
-    capturing_ = false;
+        captured_ = false;
 
-    g_timer_->stop();
+        g_timer_->stop();
+    }
 }
 
 void Catapulte::Fire_Button__clicked()
@@ -161,6 +177,16 @@ void Catapulte::Replay_Button__clicked()
     qDebug()<<"call replay function.";
 }
 
+void Catapulte::GameSetting_Accepted()
+{
+    started_ = true;
+}
+
+void Catapulte::GameSetting_Rejected()
+{
+    started_ = false;
+}
+
 void Catapulte::afficherImage()
 {
     Mat image;
@@ -169,7 +195,7 @@ void Catapulte::afficherImage()
 
         flip(image,image,1);
 
-        if(capturing_ == false)
+        if(captured_ == false)
         {
             Rect templateRect(webCam_->get(CV_CAP_PROP_FRAME_WIDTH)/2 - 48,webCam_->get(CV_CAP_PROP_FRAME_HEIGHT)/2 - 48,96,96);
             templateImage_=Mat(image,templateRect).clone();

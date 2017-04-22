@@ -6,6 +6,7 @@
 #include <QTimer>
 #include "opencv2/opencv.hpp"
 #include "gameround.h"
+#include "gamesetting.h"
 
 using namespace cv;
 
@@ -29,10 +30,12 @@ private:
     QTime runtime_;
     QTimer *f_timer_;
     QTimer *g_timer_;
-    bool capturing_;
+    bool captured_;
+    bool started_;
     Mat templateImage_;
 
     GameRound *round_;
+    GameSetting *setting_;
 
 private slots:
     void Start_Button__clicked();
@@ -40,6 +43,9 @@ private slots:
     void Restart_Button__clicked();
     void Fire_Button__clicked();
     void Replay_Button__clicked();
+
+    void GameSetting_Accepted();
+    void GameSetting_Rejected();
 
     void afficherImage();
     void afficherGlobalTime();
