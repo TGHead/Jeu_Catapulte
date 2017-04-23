@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,17 +26,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         catapulte.cpp \
     gameround.cpp \
-    gamesetting.cpp
+    gamesetting.cpp \
+    scenegl.cpp
 
 HEADERS  += catapulte.h \
     gameround.h \
     gamesetting.h \
-    enum_level.h
+    enum_level.h \
+    scenegl.h
 
 FORMS    += catapulte.ui \
     gamesetting.ui
 
 INCLUDEPATH +=$$(OPENCV_DIR)\..\..\include
+
+LIBS += -lOpengl32 -lglu32
 
 LIBS += -L$$(OPENCV_DIR)\lib \
     -lopencv_core2413 \
