@@ -23,28 +23,31 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
-SOURCES += main.cpp\
-        catapulte.cpp \
-    gameround.cpp \
-    gamesetting.cpp \
-    scenegl.cpp
+SOURCES += \
+    src/.cpp/main.cpp \
+    src/.cpp/catapulte.cpp \
+    src/.cpp/gameround.cpp \
+    src/.cpp/gamesetting.cpp \
+    src/.cpp/scenegl.cpp
 
-HEADERS  += catapulte.h \
-    gameround.h \
-    gamesetting.h \
-    enum_level.h \
-    scenegl.h
+HEADERS  += \
+    src/.h/catapulte.h \
+    src/.h/gameround.h \
+    src/.h/gamesetting.h \
+    src/.h/enum_level.h \
+    src/.h/scenegl.h
 
-FORMS    += catapulte.ui \
-    gamesetting.ui
+FORMS    += \
+    src/.ui/catapulte.ui \
+    src/.ui/gamesetting.ui
 
-INCLUDEPATH +=$$(OPENCV_DIR)\..\..\include
-
-LIBS += -lOpengl32 -lglu32
+INCLUDEPATH += $$(OPENCV_DIR)\..\..\include \
+               $$PWD/src/.h
 
 LIBS += -L$$(OPENCV_DIR)\lib \
     -lopencv_core2413 \
     -lopencv_highgui2413 \
     -lopencv_imgproc2413 \
     -lopencv_features2d2413 \
-    -lopencv_calib3d2413
+    -lopencv_calib3d2413 \
+    -lOpengl32 -lglu32

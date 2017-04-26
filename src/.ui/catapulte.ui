@@ -197,7 +197,7 @@
                 <item>
                  <widget class="QLabel" name="v_level_">
                   <property name="text">
-                   <string>Easy</string>
+                   <string>Null</string>
                   </property>
                  </widget>
                 </item>
@@ -372,7 +372,7 @@
   <customwidget>
    <class>SceneGL</class>
    <extends>QWidget</extends>
-   <header>scenegl.h</header>
+   <header>src/.h/scenegl.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
