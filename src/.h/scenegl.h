@@ -2,6 +2,7 @@
 #define SCENEGL_H
 
 #include <QGLWidget>
+#include <GL/glu.h>
 
 class SceneGL : public QGLWidget
 {
@@ -10,6 +11,17 @@ class SceneGL : public QGLWidget
 public:
     explicit SceneGL(QWidget *parent = 0);
     ~SceneGL();
+
+protected:
+    void initializeGL();
+    void paintGL();
+    void resizeGL(int width, int height);
+
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+
+private:
+    void testdraw();
 };
 
 #endif // SCENEGL_H
