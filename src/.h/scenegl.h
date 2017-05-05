@@ -3,6 +3,7 @@
 
 #include <QGLWidget>
 #include <GL/glu.h>
+#include <QtOpenGL>
 
 class SceneGL : public QGLWidget
 {
@@ -21,7 +22,13 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
 
 private:
-    void testdraw();
+    void draw();
+    void rotate_camera();
+    void calcul_cam_pos(double dtheta, double dphi);
+
+    double vec_Head_[3];
+    double pos_cam_[3];
+    QPoint lastPos_;
 };
 
 #endif // SCENEGL_H
