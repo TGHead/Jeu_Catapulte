@@ -66,11 +66,26 @@ void SceneGL::mouseMoveEvent(QMouseEvent *event)
 
     calcul_cam_pos(dtheta, dphi);
 
-    if (event->buttons() & Qt::LeftButton) {
+    if (event->buttons() & Qt::LeftButton)
+    {
         updateGL();
     }
 
     lastPos_ = event->pos();
+}
+
+void SceneGL::wheelEvent(QWheelEvent *event)
+{
+    pos_cam_[0] -= event->delta()/120;
+    if(pos_cam_[0] < 0.1)
+    {
+        pos_cam_[0] = 0.1;
+    }
+    else if(pos_cam_[0] > 200)
+    {
+        pos_cam_[0] = 200;
+    }
+    updateGL();
 }
 
 void SceneGL::draw()
@@ -82,7 +97,6 @@ void SceneGL::draw()
         glVertex3f(-1,1,0);
         glVertex3f(1,1,0);
         glVertex3f(1,-1,0);
-
     glEnd();
     glBegin(GL_TRIANGLES);
         glNormal3f(0,-1,0.707);
