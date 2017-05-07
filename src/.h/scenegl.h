@@ -24,10 +24,9 @@ protected:
 
 private:
     void draw();
-    void rotate_camera();
-    void calcul_cam_pos(double dtheta, double dphi);
+    void move_camera();
+    void rotate_camera(double X, double Y);
 
-    double vec_Head_[3];
     double pos_cam_[3];
     QPoint lastPos_;
 };

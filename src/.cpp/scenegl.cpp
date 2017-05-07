@@ -8,7 +8,6 @@ SceneGL::SceneGL(QWidget *parent)
      * [2]:angle( phi )
         unit of angle : rad*/
     pos_cam_[0] = 10.0;pos_cam_[1] = M_PI / 2;pos_cam_[2] = 0.0;
-    vec_Head_[0] = 1.0;vec_Head_[1] = 0.0;vec_Head_[2] = 0.0;
 }
 
 SceneGL::~SceneGL()
@@ -40,7 +39,7 @@ void SceneGL::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    rotate_camera();
+    move_camera();
     draw();
 }
 
@@ -61,13 +60,10 @@ void SceneGL::mousePressEvent(QMouseEvent *event)
 
 void SceneGL::mouseMoveEvent(QMouseEvent *event)
 {
-    double dphi = 0 - ((double)(event->x() - lastPos_.x()) / (double) width()) * M_PI;
-    double dtheta = 0 - ((double)(event->y() - lastPos_.y()) / (double) width()) * M_PI;
-
-    calcul_cam_pos(dtheta, dphi);
 
     if (event->buttons() & Qt::LeftButton)
     {
+        rotate_camera(event->x(), event->y());
         updateGL();
     }
 
@@ -124,44 +120,50 @@ void SceneGL::draw()
     glEnd();
 }
 
-void SceneGL::rotate_camera()
+void SceneGL::move_camera()
 {
+    double vec_up_theta = pos_cam_[1] - M_PI / 2;
+    if(vec_up_theta < 0)
+    {
+        vec_up_theta += 2 * M_PI;
+    }
     gluLookAt(pos_cam_[0] * qSin(pos_cam_[1]) * qCos(pos_cam_[2]),
               pos_cam_[0] * qSin(pos_cam_[1]) * qSin(pos_cam_[2]),
               pos_cam_[0] * qCos(pos_cam_[1]),
             0.0,0.0,0.0,
-            vec_Head_[0] * qSin(vec_Head_[1]) * qCos(vec_Head_[2]),
-            vec_Head_[0] * qSin(vec_Head_[1]) * qSin(vec_Head_[2]),
-            vec_Head_[0] * qCos(vec_Head_[1]));
+            1.0 * qSin(vec_up_theta) * qCos(pos_cam_[2]),
+            1.0 * qSin(vec_up_theta) * qSin(pos_cam_[2]),
+            1.0 * qCos(vec_up_theta));
 }
 
-void SceneGL::calcul_cam_pos(double dtheta, double dphi)
+void SceneGL::rotate_camera(double X, double Y)
 {
-    pos_cam_[1] += dtheta;
-    pos_cam_[2] += dphi;
-    for(int i = 1; i < 3; i++)
-    {
-        if(pos_cam_[i] < 0)
-        {
-            pos_cam_[i] += 2 * M_PI;
-        }
-        else if(pos_cam_[i] > 2 * M_PI)
-        {
-            pos_cam_[i] -= 2 * M_PI;
-        }
-    }
+    double dtheta = ((double)(lastPos_.y() - Y) / (double) width()) * M_PI;
+    double dphi = ((double)(lastPos_.x() - X) / (double) width()) * M_PI;
 
-    vec_Head_[1] += dtheta;
-    vec_Head_[2] += dphi;
-    for(int i = 1; i < 3; i++)
+    pos_cam_[1] += dtheta;
+    if(pos_cam_[1] < 0)
     {
-        if(vec_Head_[i] < 0)
-        {
-            vec_Head_[i] += 2 * M_PI;
-        }
-        else if(vec_Head_[i] > 2 * M_PI)
-        {
-            vec_Head_[i] -= 2 * M_PI;
-        }
+        pos_cam_[1] += 2 * M_PI;
+    }
+    else if(pos_cam_[1] > 2 * M_PI)
+    {
+        pos_cam_[1] -= 2 * M_PI;
+    }
+    if(pos_cam_[1] > 0 && pos_cam_[1] < M_PI)
+    {
+        pos_cam_[2] += dphi;
+    }
+    else
+    {
+        pos_cam_[2] -= dphi;
+    }
+    if(pos_cam_[2] < 0)
+    {
+        pos_cam_[2] += 2 * M_PI;
+    }
+    else if(pos_cam_[2] > 2 * M_PI)
+    {
+        pos_cam_[2] -= 2 * M_PI;
     }
 }
