@@ -26,8 +26,10 @@ private:
     void draw();
     void move_camera();
     void rotate_camera(double X, double Y);
+    void translate_camera(double X, double Y);
 
-    double pos_cam_[3];
+    double target_pos_[3];// record the center of the viewport which the camera point to.
+    double cam_pos_vec_[3]; //record a vector which points to the camera's position from the target center.
     QPoint lastPos_;
 };
 
