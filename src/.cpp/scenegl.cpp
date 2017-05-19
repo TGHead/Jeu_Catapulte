@@ -8,7 +8,7 @@ SceneGL::SceneGL(QWidget *parent)
      * [2]:angle( phi )
         unit of angle : rad*/
     target_pos_[0] = 0.0; target_pos_[1] = 0.0; target_pos_[2] = 0.0;
-    cam_pos_vec_[0] = 10.0;cam_pos_vec_[1] = M_PI / 2;cam_pos_vec_[2] = 0.0;
+    cam_pos_vec_[0] = 100.0;cam_pos_vec_[1] = M_PI / 3;cam_pos_vec_[2] = M_PI * 3 / 2;
 }
 
 SceneGL::~SceneGL()
@@ -45,6 +45,10 @@ void SceneGL::initializeGL()
 
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHTING);
+//    glDisable(GL_LIGHTING);
+
+    initGlobalSceneList();
+
 }
 
 void SceneGL::paintGL()
@@ -104,38 +108,46 @@ void SceneGL::wheelEvent(QWheelEvent *event)
 
 void SceneGL::draw()
 {
+    glCallList(global_scene_list_);
+//    glEnable(GL_COLOR_MATERIAL);
+//    glColorMaterial(GL_FRONT,GL_AMBIENT);
+//    GLfloat mat_color_test[] = {0.0 ,0.0 ,0.0, 1.0};
+//    GLfloat mat_shininess[] = {0.0};
+//    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_color_test);
+//    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 //    qglColor(Qt::red);
-    glBegin(GL_QUADS);
-        glNormal3f(0,0,-1);
-        glVertex3f(-1,-1,0);
-        glVertex3f(-1,1,0);
-        glVertex3f(1,1,0);
-        glVertex3f(1,-1,0);
-    glEnd();
-    glBegin(GL_TRIANGLES);
-        glNormal3f(0,-1,0.707);
-        glVertex3f(-1,-1,0);
-        glVertex3f(1,-1,0);
-        glVertex3f(0,0,1.2);
-    glEnd();
-    glBegin(GL_TRIANGLES);
-        glNormal3f(1,0, 0.707);
-        glVertex3f(1,-1,0);
-        glVertex3f(1,1,0);
-        glVertex3f(0,0,1.2);
-    glEnd();
-    glBegin(GL_TRIANGLES);
-        glNormal3f(0,1,0.707);
-        glVertex3f(1,1,0);
-        glVertex3f(-1,1,0);
-        glVertex3f(0,0,1.2);
-    glEnd();
-    glBegin(GL_TRIANGLES);
-        glNormal3f(-1,0,0.707);
-        glVertex3f(-1,1,0);
-        glVertex3f(-1,-1,0);
-        glVertex3f(0,0,1.2);
-    glEnd();
+//    glBegin(GL_QUADS);
+//        glNormal3f(0,0,-1);
+//        glVertex3f(-1,-1,0);
+//        glVertex3f(-1,1,0);
+//        glVertex3f(1,1,0);
+//        glVertex3f(1,-1,0);
+//    glEnd();
+//    glBegin(GL_TRIANGLES);
+//        glNormal3f(0,-1,0.707);
+//        glVertex3f(-1,-1,0);
+//        glVertex3f(1,-1,0);
+//        glVertex3f(0,0,1.2);
+//    glEnd();
+//    glBegin(GL_TRIANGLES);
+//        glNormal3f(1,0, 0.707);
+//        glVertex3f(1,-1,0);
+//        glVertex3f(1,1,0);
+//        glVertex3f(0,0,1.2);
+//    glEnd();
+//    glBegin(GL_TRIANGLES);
+//        glNormal3f(0,1,0.707);
+//        glVertex3f(1,1,0);
+//        glVertex3f(-1,1,0);
+//        glVertex3f(0,0,1.2);
+//    glEnd();
+//    glBegin(GL_TRIANGLES);
+//        glNormal3f(-1,0,0.707);
+//        glVertex3f(-1,1,0);
+//        glVertex3f(-1,-1,0);
+//        glVertex3f(0,0,1.2);
+//    glEnd();
+//    glDisable(GL_COLOR_MATERIAL);
 }
 
 void SceneGL::move_camera()
@@ -159,6 +171,7 @@ void SceneGL::move_camera()
               1.0 * qSin(vec_up_theta) * qCos(cam_pos_vec_[2]),
               1.0 * qSin(vec_up_theta) * qSin(cam_pos_vec_[2]),
               1.0 * qCos(vec_up_theta));
+//    qDebug()<<cam_pos_vec_[1]<<" "<<cam_pos_vec_[2];
 }
 
 void SceneGL::rotate_camera(double X, double Y)
@@ -225,4 +238,200 @@ void SceneGL::translate_camera(double X, double Y)
     {
         target_pos_[2] = qAtan(y / x);
     }
+}
+
+void SceneGL::initGlobalSceneList()
+{
+    global_scene_list_ = glGenLists(1);
+    glNewList(global_scene_list_, GL_COMPILE);
+        drawGround();
+        drawSticks();
+    glEndList();
+}
+
+void SceneGL::drawGround()
+{
+    glPushMatrix();
+//        glEnable(GL_COLOR_MATERIAL);
+//        glColorMaterial(GL_FRONT,GL_AMBIENT);
+        GLfloat mat_color_test[] = {0.0 ,1.0 ,0.0, 1.0};
+//        GLfloat mat_shininess[] = {64.0};
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_test);
+//        glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+//        qglColor(Qt::red);
+        glBegin(GL_QUADS);
+            glNormal3f(0,0,1);
+            glVertex3f(-25,0,0);
+            glVertex3f(25,0,0);
+            glVertex3f(25,100,0);
+            glVertex3f(-25,100,0);
+        glEnd();
+//            glDisable(GL_COLOR_MATERIAL);
+    glPopMatrix();
+}
+
+void SceneGL::drawSticks()
+{
+    int x = -20, y = 5, flag = 0;
+    while(true)
+    {
+        drawStick(x, y);
+        drawNet(x, y, flag);
+        if(x == -20 && y < 95)
+        {
+            y += 5;
+            flag = (y == 95) ? 1 : 0;
+        }
+        else if(y == 95 && x < 20)
+        {
+            x += 5;
+            flag = (x == 20) ? 2 : 1;
+        }
+        else if(x == 20 && y > 5)
+        {
+            y -= 5;
+            flag = (y == 5) ? 3 : 2;
+        }
+        else break;
+    }
+}
+
+void SceneGL::drawStick(int x, int y)
+{
+    glPushMatrix();
+        GLfloat mat_color_stick[] = {0.6 ,0.6 ,0.6, 1.0};
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_stick);
+        glBegin(GL_QUAD_STRIP);
+            glNormal3f(0, 1, 0);
+            glVertex3f(x+0.1, y+0.1, 5);
+            glVertex3f(x+0.1, y+0.1, 0);
+            glVertex3f(x-0.1, y+0.1, 5);
+            glVertex3f(x-0.1, y+0.1, 0);
+            glNormal3f(-1, 0, 0);
+            glVertex3f(x-0.1, y-0.1, 5);
+            glVertex3f(x-0.1, y-0.1, 0);
+            glNormal3f(0, -1, 0);
+            glVertex3f(x+0.1, y-0.1, 5);
+            glVertex3f(x+0.1, y-0.1, 0);
+            glNormal3f(1, 0, 0);
+            glVertex3f(x+0.1, y+0.1, 5);
+            glVertex3f(x+0.1, y+0.1, 0);
+        glEnd();
+        glBegin(GL_QUADS);
+            glNormal3f(0, 0, 1);
+            glVertex3f(x+0.1, y+0.1, 5);
+            glVertex3f(x-0.1, y+0.1, 5);
+            glVertex3f(x-0.1, y-0.1, 5);
+            glVertex3f(x+0.1, y-0.1, 5);
+        glEnd();
+    glPopMatrix();
+}
+
+void SceneGL::drawNet(float x, float y, int flag)
+{
+    if(flag == 3) return;
+    glPushMatrix();
+        GLfloat mat_color_net[] = {0.6 ,0.6 ,0.6, 1.0};
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_net);
+        glBegin(GL_LINE_STRIP);
+            for(int z = 0 ; z <= 5 ; z++)
+            {
+                glVertex3f(x, y, z);
+                if(z % 2 == 0)
+                    if(flag == 0)
+                        y += 5;
+                    else if(flag == 1)
+                        x += 5;
+                    else
+                        y -= 5;
+                else
+                    if(flag == 0)
+                        y -= 5;
+                    else if(flag == 1)
+                        x -= 5;
+                    else
+                        y += 5;
+            }
+            for(int z = 5 ; z >= 0 ; z--)
+            {
+                glVertex3f(x, y, z);
+                if(z % 2 == 0)
+                    if(flag == 0)
+                        y -= 5;
+                    else if(flag == 1)
+                        x -= 5;
+                    else
+                        y += 5;
+                else
+                    if(flag == 0)
+                        y += 5;
+                    else if(flag == 1)
+                        x += 5;
+                    else
+                        y -= 5;
+            }
+        glEnd();
+        glBegin(GL_LINE_LOOP);
+            float x_mid, y_mid;
+            if(flag == 0)
+            {
+                x_mid = x;y_mid = y + 2.5;
+                y += 5;
+            }
+            else if(flag == 1)
+            {
+                x_mid = x + 2.5;y_mid = y;
+                x += 5;
+            }
+            else
+            {
+                x_mid = x;y_mid = y - 2.5;
+                y -= 5;
+            }
+            glVertex3f(x_mid, y_mid, 0);
+            qDebug()<<x_mid<<" "<<y_mid;
+            for(float z = 0.5 ; z <= 4.5 ; z+=1)
+            {
+                glVertex3f(x, y, z);
+                qDebug()<<x<<" "<<y;
+                if((int)(z + 0.5) % 2 == 0)
+                    if(flag == 0)
+                        y += 5;
+                    else if(flag == 1)
+                        x += 5;
+                    else
+                        y -= 5;
+                else
+                    if(flag == 0)
+                        y -= 5;
+                    else if(flag == 1)
+                        x -= 5;
+                    else
+                        y += 5;
+            }
+            glVertex3f(x_mid, y_mid, 5);
+            qDebug()<<x_mid<<" "<<y_mid;
+            for(float z = 4.5 ; z >= 0.5 ; z-=1)
+            {
+                glVertex3f(x, y, z);
+                qDebug()<<x<<" "<<y;
+                if((int)(z + 0.5) % 2 == 0)
+                    if(flag == 0)
+                        y -= 5;
+                    else if(flag == 1)
+                        x -= 5;
+                    else
+                        y += 5;
+                else
+                    if(flag == 0)
+                        y += 5;
+                    else if(flag == 1)
+                        x += 5;
+                    else
+                        y -= 5;
+            }
+            glVertex3f(x_mid, y_mid, 0);
+            qDebug()<<x_mid<<" "<<y_mid;
+        glEnd();
+    glPopMatrix();
 }

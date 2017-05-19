@@ -28,9 +28,17 @@ private:
     void rotate_camera(double X, double Y);
     void translate_camera(double X, double Y);
 
+    void initGlobalSceneList();
+    void drawGround();
+    void drawSticks();
+    void drawStick(int x, int y);
+    void drawNet(float x, float y, int flag);
+
     double target_pos_[3];// record the center of the viewport which the camera point to.
     double cam_pos_vec_[3]; //record a vector which points to the camera's position from the target center.
     QPoint lastPos_;
+
+    GLuint global_scene_list_;
 };
 
 #endif // SCENEGL_H
