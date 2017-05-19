@@ -2,7 +2,7 @@
 #define SCENEGL_H
 
 #include <QGLWidget>
-#include <GL/glu.h>
+#include <OpenGL/glu.h>
 #include <QtOpenGL>
 
 class SceneGL : public QGLWidget
