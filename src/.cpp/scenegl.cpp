@@ -245,7 +245,7 @@ void SceneGL::initGlobalSceneList()
     global_scene_list_ = glGenLists(1);
     glNewList(global_scene_list_, GL_COMPILE);
         drawGround();
-        drawSticks();
+        drawBarbedWire();
     glEndList();
 }
 
@@ -270,7 +270,7 @@ void SceneGL::drawGround()
     glPopMatrix();
 }
 
-void SceneGL::drawSticks()
+void SceneGL::drawBarbedWire()
 {
     int x = -20, y = 5, flag = 0;
     while(true)
@@ -389,11 +389,9 @@ void SceneGL::drawNet(float x, float y, int flag)
                 y -= 5;
             }
             glVertex3f(x_mid, y_mid, 0);
-            qDebug()<<x_mid<<" "<<y_mid;
             for(float z = 0.5 ; z <= 4.5 ; z+=1)
             {
                 glVertex3f(x, y, z);
-                qDebug()<<x<<" "<<y;
                 if((int)(z + 0.5) % 2 == 0)
                     if(flag == 0)
                         y += 5;
@@ -410,11 +408,9 @@ void SceneGL::drawNet(float x, float y, int flag)
                         y += 5;
             }
             glVertex3f(x_mid, y_mid, 5);
-            qDebug()<<x_mid<<" "<<y_mid;
             for(float z = 4.5 ; z >= 0.5 ; z-=1)
             {
                 glVertex3f(x, y, z);
-                qDebug()<<x<<" "<<y;
                 if((int)(z + 0.5) % 2 == 0)
                     if(flag == 0)
                         y -= 5;
@@ -431,7 +427,6 @@ void SceneGL::drawNet(float x, float y, int flag)
                         y -= 5;
             }
             glVertex3f(x_mid, y_mid, 0);
-            qDebug()<<x_mid<<" "<<y_mid;
         glEnd();
     glPopMatrix();
 }

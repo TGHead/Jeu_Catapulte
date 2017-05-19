@@ -30,7 +30,7 @@ private:
 
     void initGlobalSceneList();
     void drawGround();
-    void drawSticks();
+    void drawBarbedWire();
     void drawStick(int x, int y);
     void drawNet(float x, float y, int flag);
 

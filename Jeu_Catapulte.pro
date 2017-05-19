@@ -51,3 +51,6 @@ LIBS += -L$$(OPENCV_DIR)\lib \
     -lopencv_features2d2413 \
     -lopencv_calib3d2413 \
     -lOpengl32 -lglu32
+
+RESOURCES += \
+    res/texture_image.qrc
