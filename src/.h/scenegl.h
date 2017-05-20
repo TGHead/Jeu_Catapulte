@@ -33,10 +33,14 @@ private:
     void drawBarbedWire();
     void drawStick(int x, int y);
     void drawNet(float x, float y, int flag);
+    void loadTextures();
+    void drawTexture(float x, float y, int flag);
 
     double target_pos_[3];// record the center of the viewport which the camera point to.
     double cam_pos_vec_[3]; //record a vector which points to the camera's position from the target center.
     QPoint lastPos_;
+
+    GLuint LOGO_texture_;
 
     GLuint global_scene_list_;
 };

@@ -32,9 +32,11 @@ void SceneGL::initializeGL()
 {
     qglClearColor(Qt::black);
 
+//    glEnable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+//    glEnable(GL_CULL_FACE);
     glShadeModel(GL_SMOOTH);
+//    glEnable(GL_TEXTURE_2D);
 
 //    GLfloat global_light_position[] = { 0.0f ,0.0f ,1.0f ,0.0f };
     GLfloat global_light_ambient[] = { 1.0f ,1.0f ,1.0f ,1.0f };
@@ -47,7 +49,9 @@ void SceneGL::initializeGL()
     glEnable(GL_LIGHTING);
 //    glDisable(GL_LIGHTING);
 
+    loadTextures();
     initGlobalSceneList();
+
 
 }
 
@@ -272,25 +276,28 @@ void SceneGL::drawGround()
 
 void SceneGL::drawBarbedWire()
 {
-    int x = -20, y = 5, flag = 0;
+    int x = -20, y = 5, flag_net = 0, flag_tex = 0;
     while(true)
     {
+        flag_tex = 1 - flag_tex;
         drawStick(x, y);
-        drawNet(x, y, flag);
+        drawNet(x, y, flag_net);
+        if(flag_tex)
+            drawTexture(x, y, flag_net);
         if(x == -20 && y < 95)
         {
             y += 5;
-            flag = (y == 95) ? 1 : 0;
+            flag_net = (y == 95) ? 1 : 0;
         }
         else if(y == 95 && x < 20)
         {
             x += 5;
-            flag = (x == 20) ? 2 : 1;
+            flag_net = (x == 20) ? 2 : 1;
         }
         else if(x == 20 && y > 5)
         {
             y -= 5;
-            flag = (y == 5) ? 3 : 2;
+            flag_net = (y == 5) ? 3 : 2;
         }
         else break;
     }
@@ -428,5 +435,71 @@ void SceneGL::drawNet(float x, float y, int flag)
             }
             glVertex3f(x_mid, y_mid, 0);
         glEnd();
+    glPopMatrix();
+}
+
+void SceneGL::loadTextures()
+{
+    QImage tex, buf;
+    if(!buf.load(":/images/texture/Logo_TSE.png"))
+    {
+        qWarning("Cannot open the image!");
+        QImage dummy(128, 128, QImage::Format_RGB32);
+        dummy.fill(Qt::white);
+        buf = dummy;
+    }
+    tex = convertToGLFormat(buf);
+    glGenTextures(1, &LOGO_texture_);
+    glBindTexture(GL_TEXTURE_2D, LOGO_texture_);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
+
+void SceneGL::drawTexture(float x, float y, int flag)
+{
+    if(flag == 3) return;
+    glPushMatrix();
+        glEnable(GL_TEXTURE_2D);
+        GLfloat mat_color_tex[] = {1.0 ,1.0 ,1.0, 0.0};
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_tex);
+        glBegin(GL_QUADS);
+            if(flag == 0)
+            {
+                glTexCoord2f(0.0, 0.0);
+                glVertex3f(x, y + 0.5, 0.5);
+                glTexCoord2f(1.0, 0.0);
+                glVertex3f(x, y + 4.5, 0.5);
+                glTexCoord2f(1.0, 1.0);
+                glVertex3f(x, y + 4.5, 4.5);
+                glTexCoord2f(0.0, 1.0);
+                glVertex3f(x, y + 0.5, 4.5);
+            }
+            else if(flag == 1)
+            {
+                glTexCoord2f(0.0, 0.0);
+                glVertex3f(x + 0.5, y, 0.5);
+                glTexCoord2f(1.0, 0.0);
+                glVertex3f(x + 4.5, y, 0.5);
+                glTexCoord2f(1.0, 1.0);
+                glVertex3f(x + 4.5, y, 4.5);
+                glTexCoord2f(0.0, 1.0);
+                glVertex3f(x + 0.5, y, 4.5);
+            }
+            else
+            {
+                glTexCoord2f(0.0, 0.0);
+                glVertex3f(x, y - 0.5, 0.5);
+                glTexCoord2f(1.0, 0.0);
+                glVertex3f(x, y - 4.5, 0.5);
+                glTexCoord2f(1.0, 1.0);
+                glVertex3f(x, y - 4.5, 4.5);
+                glTexCoord2f(0.0, 1.0);
+                glVertex3f(x, y - 0.5, 4.5);
+            }
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 }
