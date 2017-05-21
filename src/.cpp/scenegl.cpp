@@ -20,6 +20,15 @@ SceneGL::~SceneGL()
 
 }
 
+void SceneGL::setCatapultAngle(float h, float v)
+{
+    if(catapult_status_ !=NULL)
+    {
+        catapult_status_->setAngleH(h);
+        catapult_status_->setAngleTrebuchet(v);
+    }
+}
+
 static void NormalizeAngle(double &angle)
 {
     if(angle < 0)
@@ -73,7 +82,7 @@ void SceneGL::resizeGL(int width, int height)
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(30, (double)width/height, .1, 200);
+    gluPerspective(30, (double)width/height, .1, 400);
 
     glMatrixMode(GL_MODELVIEW);
 }
@@ -117,15 +126,19 @@ void SceneGL::wheelEvent(QWheelEvent *event)
 void SceneGL::draw()
 {
     glCallList(global_scene_list_);
-    glCallList(catapult_base_);
     glPushMatrix();
-        glTranslatef(0, 0, 8);
+        glTranslatef(0, 5, 0);
+        glRotatef(catapult_status_->getAngleH(), 0, 0, 1);
+        glCallList(catapult_base_);
         glPushMatrix();
-            glRotatef(catapult_status_->getAngleTrebuchet(), 1, 0, 0);
-            glCallList(trebuchet_);
+            glTranslatef(0, 0, 8);
+            glPushMatrix();
+                glRotatef(catapult_status_->getAngleTrebuchet(), 1, 0, 0);
+                glCallList(trebuchet_);
+            glPopMatrix();
+            glTranslatef(0, 5 * qCos(catapult_status_->getAngleTrebuchet() / 180.0 * M_PI), 5 * qSin(catapult_status_->getAngleTrebuchet() / 180.0 * M_PI));
+            glCallList(trebuchet_load_);
         glPopMatrix();
-        glTranslatef(0, 5 * qCos(catapult_status_->getAngleTrebuchet() / 180.0 * M_PI), 5 * qSin(catapult_status_->getAngleTrebuchet() / 180.0 * M_PI));
-        glCallList(trebuchet_load_);
     glPopMatrix();
 }
 

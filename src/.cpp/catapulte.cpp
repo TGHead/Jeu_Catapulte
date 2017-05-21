@@ -36,6 +36,10 @@ Catapulte::Catapulte(QWidget *parent) :
 
     captured_ = false;
     started_ = false;
+    launched_ = false;
+
+//    captured_location_[0] = 0.5;
+//    captured_location_[1] = 0;
 
     f_timer_ = new QTimer(this);
     g_timer_ = new QTimer(this);
@@ -143,7 +147,6 @@ void Catapulte::Capture_Button__clicked()
 
 void Catapulte::Restart_Button__clicked()
 {
-
     delete setting_;
     setting_ = new GameSetting(this);
     connect(setting_->getButtonBox(),SIGNAL(accepted()),this,SLOT(GameSetting_Accepted()));
@@ -186,12 +189,17 @@ void Catapulte::Restart_Button__clicked()
         g_timer_->stop();
 
         started_ = false;
+
+        ui->SceneGL_->setCatapultAngle(0.5,1);
+        ui->SceneGL_->updateGL();
     }
 }
 
 void Catapulte::Fire_Button__clicked()
 {
-//    qDebug()<<ui->Score_Table_->rowCount();
+
+    launched_ = true;
+
     ui->Fire_Button_->setVisible(false);
     ui->Next_Button_->setVisible(true);
     ui->Replay_Button_->setVisible(true);
@@ -224,6 +232,8 @@ void Catapulte::Fire_Button__clicked()
 
 void Catapulte::Next_Button__clicked()
 {
+    launched_ = false;
+
     ui->Fire_Button_->setVisible(true);
     ui->Next_Button_->setVisible(false);
     ui->Replay_Button_->setVisible(false);
@@ -262,7 +272,7 @@ void Catapulte::afficherImage()
         else
         {
             Mat resultImage;    // to store the matchTemplate result
-            int result_cols =  image.cols - templateImage_.cols + 1;
+            int result_cols = image.cols - templateImage_.cols + 1;
             int result_rows = image.rows - templateImage_.rows + 1;
             resultImage.create( result_cols, result_rows, CV_32FC1 );
 
@@ -270,6 +280,13 @@ void Catapulte::afficherImage()
 
             double minVal; double maxVal; Point minLoc; Point maxLoc;
             minMaxLoc( resultImage, &minVal, &maxVal, &minLoc, &maxLoc, Mat() );
+
+            if(launched_ == false)
+            {
+                ui->SceneGL_->setCatapultAngle((float)maxLoc.x/(float)webCam_->get(CV_CAP_PROP_FRAME_WIDTH),
+                                               (float)maxLoc.y/(float)webCam_->get(CV_CAP_PROP_FRAME_HEIGHT));
+                ui->SceneGL_->updateGL();
+            }
 
             Rect resultRect=Rect(maxLoc.x,maxLoc.y,96,96);
             cvtColor(image,image,CV_BGR2RGB);

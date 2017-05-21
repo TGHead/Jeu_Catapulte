@@ -13,6 +13,7 @@ class SceneGL : public QGLWidget
 public:
     explicit SceneGL(QWidget *parent = 0);
     ~SceneGL();
+    void setCatapultAngle(float h, float v);
 
 protected:
     void initializeGL();

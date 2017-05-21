@@ -32,7 +32,9 @@ private:
     QTimer *g_timer_;
     bool captured_;
     bool started_;
+    bool launched_;
     Mat templateImage_;
+//    float captured_location_[2];
 
     GameRound *round_;
     GameSetting *setting_;
