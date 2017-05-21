@@ -37,10 +37,14 @@ private:
     void loadTextures();
     void drawTexture(float x, float y, int flag);
 
-    void initCatapultBase();
+    void initCatapult();
     void drawCatapultBase();
     void drawHolder(float dx);
-    void drawCylinder();
+    void drawCylinder(int flag);
+
+    void drawTrebuchet();
+    void drawLoad();
+    void drawholder(float dx);
 
     CatapulteStatus *catapult_status_;
 
@@ -52,6 +56,8 @@ private:
 
     GLuint global_scene_list_;
     GLuint catapult_base_;
+    GLuint trebuchet_load_;
+    GLuint trebuchet_;
 };
 
 #endif // SCENEGL_H

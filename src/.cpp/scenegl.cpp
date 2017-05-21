@@ -55,7 +55,7 @@ void SceneGL::initializeGL()
 
     loadTextures();
     initGlobalSceneList();
-    initCatapultBase();
+    initCatapult();
 
 }
 
@@ -118,6 +118,15 @@ void SceneGL::draw()
 {
     glCallList(global_scene_list_);
     glCallList(catapult_base_);
+    glPushMatrix();
+        glTranslatef(0, 0, 8);
+        glPushMatrix();
+            glRotatef(catapult_status_->getAngleTrebuchet(), 1, 0, 0);
+            glCallList(trebuchet_);
+        glPopMatrix();
+        glTranslatef(0, 5 * qCos(catapult_status_->getAngleTrebuchet() / 180.0 * M_PI), 5 * qSin(catapult_status_->getAngleTrebuchet() / 180.0 * M_PI));
+        glCallList(trebuchet_load_);
+    glPopMatrix();
 }
 
 void SceneGL::move_camera()
@@ -470,12 +479,20 @@ void SceneGL::drawTexture(float x, float y, int flag)
     glPopMatrix();
 }
 
-void SceneGL::initCatapultBase()
+void SceneGL::initCatapult()
 {
     catapult_status_ = new CatapulteStatus();
     catapult_base_ = glGenLists(1);
     glNewList(catapult_base_, GL_COMPILE);
         drawCatapultBase();
+    glEndList();
+    trebuchet_ = glGenLists(1);
+    glNewList(trebuchet_, GL_COMPILE);
+        drawTrebuchet();
+    glEndList();
+    trebuchet_load_ = glGenLists(1);
+    glNewList(trebuchet_load_, GL_COMPILE);
+        drawLoad();
     glEndList();
 }
 
@@ -513,7 +530,7 @@ void SceneGL::drawCatapultBase()
         glEnd();
         drawHolder(-3);
         drawHolder(2.5);
-        drawCylinder();
+        drawCylinder(0);
     glPopMatrix();
 }
 
@@ -579,12 +596,132 @@ void SceneGL::drawHolder(float dx)
     glPopMatrix();
 }
 
-void SceneGL::drawCylinder()
+void SceneGL::drawCylinder(int flag)
 {
     glPushMatrix();
-        glTranslatef(-2.5, 0, 8);
-        glRotatef(90, 0, 1, 0);
         GLUquadric *cylinder = gluNewQuadric();
-        gluCylinder(cylinder,0.2,0.2,5,32,32);
+        if(flag == 0)
+        {
+            glTranslatef(-2.5, 0, 8);
+            glRotatef(90, 0, 1, 0);
+            gluCylinder(cylinder,0.2,0.2,5,32,32);
+        }
+        else
+        {
+            glTranslatef(-0.4, 0, 0);
+            glRotatef(90, 0, 1, 0);
+            gluCylinder(cylinder,0.1,0.1,0.8,32,32);
+        }
+//        delete cylinder;
+    glPopMatrix();
+}
+
+void SceneGL::drawTrebuchet()
+{
+    glPushMatrix();
+        GLfloat mat_color_trebuchet[] = {0.7 ,0.4 ,0.0, 1.0};
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_trebuchet);
+        glBegin(GL_QUAD_STRIP);
+            glNormal3f(0, 0, 1);
+            glVertex3f(0.3, 5, 0.3);
+            glVertex3f(-0.3, 5, 0.3);
+            glVertex3f(0.3, -17, 0.3);
+            glVertex3f(-0.3, -17, 0.3);
+            glNormal3f(0, -1, 0);
+            glVertex3f(0.3, -17, -0.3);
+            glVertex3f(-0.3, -17, -0.3);
+            glNormal3f(0, 0, -1);
+            glVertex3f(0.3, 5, -0.3);
+            glVertex3f(-0.3, 5, -0.3);
+        glEnd();
+        glBegin(GL_QUAD_STRIP);
+            glNormal3f(-1, 0, 0);
+            glVertex3f(-0.3, -17, 0.3);
+            glVertex3f(-0.3, -17, -0.3);
+            glVertex3f(-0.3, 5, 0.3);
+            glVertex3f(-0.3, 5, -0.3);
+            glNormal3f(0, 1, 0);
+            glVertex3f(0.3, 5, 0.3);
+            glVertex3f(0.3, 5, -0.3);
+            glNormal3f(1, 0, 0);
+            glVertex3f(0.3, -17, 0.3);
+            glVertex3f(0.3, -17, -0.3);
+        glEnd();
+    glPopMatrix();
+}
+
+void SceneGL::drawLoad()
+{
+    GLfloat mat_color_load[] = {0.7 ,0.4 ,0.0, 1.0};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_load);
+    glPushMatrix();
+        drawCylinder(1);
+        drawholder(-0.5);
+        drawholder(0.4);
+        glBegin(GL_QUAD_STRIP);
+            glNormal3f(0, 0, 1);
+            glVertex3f(0.5, 1, -1);
+            glVertex3f(-0.5, 1, -1);
+            glVertex3f(0.5, -1, -1);
+            glVertex3f(-0.5, -1, -1);
+            glNormal3f(0, -1, 0);
+            glVertex3f(0.5, -1, -2);
+            glVertex3f(-0.5, -1, -2);
+            glNormal3f(0, 0, -1);
+            glVertex3f(0.5, 1, -2);
+            glVertex3f(-0.5, 1, -2);
+        glEnd();
+        glBegin(GL_QUAD_STRIP);
+            glNormal3f(-1, 0, 0);
+            glVertex3f(-0.5, -1, -1);
+            glVertex3f(-0.5, -1, -2);
+            glVertex3f(-0.5, 1, -1);
+            glVertex3f(-0.5, 1, -2);
+            glNormal3f(0, 1, 0);
+            glVertex3f(0.5, 1, -1);
+            glVertex3f(0.5, 1, -2);
+            glNormal3f(1, 0, 0);
+            glVertex3f(0.5, -1, -1);
+            glVertex3f(0.5, -1, -2);
+        glEnd();
+    glPopMatrix();
+}
+
+void SceneGL::drawholder(float dx)
+{
+    glPushMatrix();
+        glTranslatef(dx, 0 ,0);
+        glBegin(GL_QUAD_STRIP);
+            glNormal3f(-1, 0, 0);
+            glVertex3f(0, 0, qSqrt(2) * 0.1);
+            glVertex3f(0, 1, -1);
+            glVertex3f(0, 0, -qSqrt(2) * 0.1);
+            glVertex3f(0, 1 - qSqrt(2) * 0.2, -1);
+            glNormal3f(0, -1, -1);
+            glVertex3f(0.1, 0, -qSqrt(2) * 0.1);
+            glVertex3f(0.1, 1 - qSqrt(2) * 0.2, -1);
+            glNormal3f(1, 0, 0);
+            glVertex3f(0.1, 0, qSqrt(2) * 0.1);
+            glVertex3f(0.1, 1, -1);
+            glNormal3f(0, 1, 1);
+            glVertex3f(0, 0, qSqrt(2) * 0.1);
+            glVertex3f(0, 1, -1);
+        glEnd();
+        glBegin(GL_QUAD_STRIP);
+            glNormal3f(-1, 0, 0);
+            glVertex3f(0, 0, qSqrt(2) * 0.1);
+            glVertex3f(0, -1, -1);
+            glVertex3f(0, 0, -qSqrt(2) * 0.1);
+            glVertex3f(0, qSqrt(2) * 0.2 - 1, -1);
+            glNormal3f(0, 1, -1);
+            glVertex3f(0.1, 0, -qSqrt(2) * 0.1);
+            glVertex3f(0.1, qSqrt(2) * 0.2 - 1, -1);
+            glNormal3f(1, 0, 0);
+            glVertex3f(0.1, 0, qSqrt(2) * 0.1);
+            glVertex3f(0.1, -1, -1);
+            glNormal3f(0, -1, 1);
+            glVertex3f(0, 0, qSqrt(2) * 0.1);
+            glVertex3f(0, -1, -1);
+        glEnd();
     glPopMatrix();
 }
