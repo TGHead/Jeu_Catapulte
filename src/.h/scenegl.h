@@ -4,6 +4,7 @@
 #include <QGLWidget>
 #include <GL/glu.h>
 #include <QtOpenGL>
+#include "catapultestatus.h"
 
 class SceneGL : public QGLWidget
 {
@@ -36,6 +37,13 @@ private:
     void loadTextures();
     void drawTexture(float x, float y, int flag);
 
+    void initCatapultBase();
+    void drawCatapultBase();
+    void drawHolder(float dx);
+    void drawCylinder();
+
+    CatapulteStatus *catapult_status_;
+
     double target_pos_[3];// record the center of the viewport which the camera point to.
     double cam_pos_vec_[3]; //record a vector which points to the camera's position from the target center.
     QPoint lastPos_;
@@ -43,6 +51,7 @@ private:
     GLuint LOGO_texture_;
 
     GLuint global_scene_list_;
+    GLuint catapult_base_;
 };
 
 #endif // SCENEGL_H

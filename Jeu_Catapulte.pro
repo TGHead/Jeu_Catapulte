@@ -28,14 +28,16 @@ SOURCES += \
     src/.cpp/catapulte.cpp \
     src/.cpp/gameround.cpp \
     src/.cpp/gamesetting.cpp \
-    src/.cpp/scenegl.cpp
+    src/.cpp/scenegl.cpp \
+    src/.cpp/catapultestatus.cpp
 
 HEADERS  += \
     src/.h/catapulte.h \
     src/.h/gameround.h \
     src/.h/gamesetting.h \
     src/.h/enum_level.h \
-    src/.h/scenegl.h
+    src/.h/scenegl.h \
+    src/.h/catapultestatus.h
 
 FORMS    += \
     src/.ui/catapulte.ui \
