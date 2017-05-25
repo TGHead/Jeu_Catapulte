@@ -1,4 +1,4 @@
-#include "scenegl.h"
+#include "src/.h/scenegl.h"
 
 SceneGL::SceneGL(QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
@@ -253,10 +253,10 @@ void SceneGL::drawGround()
 //        qglColor(Qt::red);
         glBegin(GL_QUADS);
             glNormal3f(0,0,1);
-            glVertex3f(-25,-10,0);
-            glVertex3f(25,-10,0);
-            glVertex3f(25,100,0);
-            glVertex3f(-25,100,0);
+            glVertex3f(-50,-10,0);
+            glVertex3f(50,-10,0);
+            glVertex3f(50,100,0);
+            glVertex3f(-50,100,0);
         glEnd();
 //            glDisable(GL_COLOR_MATERIAL);
     glPopMatrix();
@@ -264,7 +264,7 @@ void SceneGL::drawGround()
 
 void SceneGL::drawBarbedWire()
 {
-    int x = -20, y = 5, flag_net = 0, flag_tex = 0;
+    int x = -45, y = 5, flag_net = 0, flag_tex = 0;
     while(true)
     {
         flag_tex = 1 - flag_tex;
@@ -272,17 +272,17 @@ void SceneGL::drawBarbedWire()
         drawNet(x, y, flag_net);
         if(flag_tex)
             drawTexture(x, y, flag_net);
-        if(x == -20 && y < 95)
+        if(x == -45 && y < 95)
         {
             y += 5;
             flag_net = (y == 95) ? 1 : 0;
         }
-        else if(y == 95 && x < 20)
+        else if(y == 95 && x < 45)
         {
             x += 5;
-            flag_net = (x == 20) ? 2 : 1;
+            flag_net = (x == 45) ? 2 : 1;
         }
-        else if(x == 20 && y > 5)
+        else if(x == 45 && y > 5)
         {
             y -= 5;
             flag_net = (y == 5) ? 3 : 2;
