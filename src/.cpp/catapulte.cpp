@@ -1,4 +1,4 @@
-#include "catapulte.h"
+#include "src/.h/catapulte.h"
 #include "ui_catapulte.h"
 
 #include <QGraphicsView>

@@ -2,7 +2,7 @@
 #define SCENEGL_H
 
 #include <QGLWidget>
-#include <GL/glu.h>
+#include <openGL/glu.h>
 #include <QtOpenGL>
 #include "catapultestatus.h"
 
@@ -37,8 +37,9 @@ private:
     void drawBarbedWire();
     void drawStick(int x, int y);
     void drawNet(float x, float y, int flag);
-    void loadTextures();
-    void drawTexture(float x, float y, int flag);
+    void loadTextures_logo();
+    void drawTexture_logo(float x, float y, int flag);
+    void draw_circle(const GLfloat radius,const GLuint num_vertex);
 
     void initCatapult();
     void drawCatapultBase();
@@ -58,6 +59,7 @@ private:
     QPoint lastPos_;
 
     GLuint LOGO_texture_;
+    GLuint TARGET_texture_;
 
     GLuint global_scene_list_;
     GLuint catapult_base_;

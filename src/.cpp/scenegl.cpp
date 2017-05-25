@@ -17,7 +17,11 @@ SceneGL::~SceneGL()
 {
     if(catapult_status_ != NULL)
         delete catapult_status_;
-    glDeleteTextures(1, &LOGO_texture_);
+
+    glDeleteTextures (1, &TARGET_texture_);
+    glDeleteTextures (1, &LOGO_texture_);
+
+
 }
 
 void SceneGL::setCatapultAngle(float h, float v)
@@ -67,7 +71,7 @@ void SceneGL::initializeGL()
     glEnable(GL_LIGHTING);
 //    glDisable(GL_LIGHTING);
 
-    loadTextures();
+//    loadTextures_logo();
     initGlobalSceneList();
     initCatapult();
 
@@ -149,6 +153,10 @@ void SceneGL::draw()
             glTranslatef(0, 5 * qCos(catapult_status_->getAngleTrebuchet() / 180.0 * M_PI), 5 * qSin(catapult_status_->getAngleTrebuchet() / 180.0 * M_PI));
             glCallList(trebuchet_load_);
         glPopMatrix();
+    glPopMatrix();
+    glPushMatrix();
+        glTranslatef(0,50,0.01);
+        draw_circle(5,100);
     glPopMatrix();
 }
 
@@ -247,10 +255,11 @@ void SceneGL::initGlobalSceneList()
     global_scene_list_ = glGenLists(1);
     glNewList(global_scene_list_, GL_COMPILE);
         drawGround();
+        loadTextures_logo();
         drawBarbedWire();
     glEndList();
-}
 
+}
 void SceneGL::drawGround()
 {
     glPushMatrix();
@@ -281,7 +290,7 @@ void SceneGL::drawBarbedWire()
         drawStick(x, y);
         drawNet(x, y, flag_net);
         if(flag_tex)
-            drawTexture(x, y, flag_net);
+            drawTexture_logo(x, y, flag_net);
         if(x == -45 && y < 95)
         {
             y += 5;
@@ -299,6 +308,7 @@ void SceneGL::drawBarbedWire()
         }
         else break;
     }
+
 }
 
 void SceneGL::drawStick(int x, int y)
@@ -436,7 +446,7 @@ void SceneGL::drawNet(float x, float y, int flag)
     glPopMatrix();
 }
 
-void SceneGL::loadTextures()
+void SceneGL::loadTextures_logo()
 {
     QImage tex, buf;
     if(!buf.load(":/images/texture/Logo_TSE.png"))
@@ -456,7 +466,7 @@ void SceneGL::loadTextures()
 }
 
 
-void SceneGL::drawTexture(float x, float y, int flag)
+void SceneGL::drawTexture_logo(float x, float y, int flag)
 {
     if(flag == 3) return;
     glPushMatrix();
@@ -501,6 +511,72 @@ void SceneGL::drawTexture(float x, float y, int flag)
         glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 }
+
+
+void SceneGL::draw_circle(const GLfloat radius,const GLuint num_vertex)
+{
+    QImage tex, buf;
+    if(!buf.load(":/images/texture/target.png"))
+    {
+        qWarning("Cannot open the image!");
+        QImage dummy(128, 128, QImage::Format_RGB32);
+        dummy.fill(Qt::white);
+        buf = dummy;
+    }
+    tex = convertToGLFormat(buf);
+    glGenTextures(1, &TARGET_texture_);
+    glBindTexture(GL_TEXTURE_2D, TARGET_texture_);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    GLfloat vertex[4];
+    GLfloat texcoord[2];
+
+    const GLfloat delta_angle = 2.0*M_PI/num_vertex;
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D,TARGET_texture_);
+    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+    glBegin(GL_TRIANGLE_FAN);
+
+    //draw the vertex at the center of the circle
+    texcoord[0] = 0.5;
+    texcoord[1] = 0.5;
+    glTexCoord2fv(texcoord);
+    vertex[0] = vertex[1] = vertex[2] = 0.0;
+    vertex[3] = 1.0;
+    glVertex4fv(vertex);
+
+    //draw the vertex on the contour of the circle
+    for(int i = 0; i < num_vertex ; i++)
+    {
+        texcoord[0] = (std::cos(delta_angle*i) + 1.0)*0.5;
+        texcoord[1] = (std::sin(delta_angle*i) + 1.0)*0.5;
+        glTexCoord2fv(texcoord);
+
+        vertex[0] = std::cos(delta_angle*i) * radius;
+        vertex[1] = std::sin(delta_angle*i) * radius;
+        vertex[2] = 0.0;
+        vertex[3] = 1.0;
+        glVertex4fv(vertex);
+    }
+
+    texcoord[0] = (1.0 + 1.0)*0.5;
+    texcoord[1] = (0.0 + 1.0)*0.5;
+    glTexCoord2fv(texcoord);
+
+    vertex[0] = 1.0 * radius;
+    vertex[1] = 0.0 * radius;
+    vertex[2] = 0.0;
+    vertex[3] = 1.0;
+    glVertex4fv(vertex);
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);
+}
+
 
 void SceneGL::initCatapult()
 {
