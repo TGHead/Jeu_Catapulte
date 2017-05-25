@@ -14,6 +14,7 @@ public:
     explicit SceneGL(QWidget *parent = 0);
     ~SceneGL();
     void setCatapultAngle(float h, float v);
+    void drawAnime();
 
 protected:
     void initializeGL();
@@ -37,13 +38,14 @@ private:
     void drawNet(float x, float y, int flag);
     void loadTextures_logo();
     void drawTexture_logo(float x, float y, int flag);
-    void loadTextures_target();
     void draw_circle(const GLfloat radius,const GLuint num_vertex);
 
     void initCatapult();
     void drawCatapultBase();
     void drawHolder(float dx);
     void drawCylinder(int flag);
+    void drawSphere();
+    void drawConnecter();
 
     void drawTrebuchet();
     void drawLoad();

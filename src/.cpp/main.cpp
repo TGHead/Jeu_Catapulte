@@ -1,4 +1,4 @@
-#include "catapulte.h"
+#include "src/.h/catapulte.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])

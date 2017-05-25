@@ -17,8 +17,10 @@ SceneGL::~SceneGL()
 {
     if(catapult_status_ != NULL)
         delete catapult_status_;
+
     glDeleteTextures (1, &TARGET_texture_);
     glDeleteTextures (1, &LOGO_texture_);
+
 
 }
 
@@ -29,6 +31,11 @@ void SceneGL::setCatapultAngle(float h, float v)
         catapult_status_->setAngleH(h);
         catapult_status_->setAngleTrebuchet(v);
     }
+}
+
+void SceneGL::drawAnime()
+{
+
 }
 
 static void NormalizeAngle(double &angle)
@@ -135,6 +142,11 @@ void SceneGL::draw()
         glPushMatrix();
             glTranslatef(0, 0, 8);
             glPushMatrix();
+                glPushMatrix();
+                    glTranslatef(0, catapult_status_->getSphereYPos(), -7.5);
+                    drawSphere();
+                glPopMatrix();
+                drawConnecter();
                 glRotatef(catapult_status_->getAngleTrebuchet(), 1, 0, 0);
                 glCallList(trebuchet_);
             glPopMatrix();
@@ -143,7 +155,7 @@ void SceneGL::draw()
         glPopMatrix();
     glPopMatrix();
     glPushMatrix();
-        glTranslatef(0,0,10);
+        glTranslatef(0,50,0.01);
         draw_circle(5,100);
     glPopMatrix();
 }
@@ -245,23 +257,7 @@ void SceneGL::initGlobalSceneList()
         drawGround();
         loadTextures_logo();
         drawBarbedWire();
-    glPushMatrix();
-//        glEnable(GL_COLOR_MATERIAL);
-//        glColorMaterial(GL_FRONT,GL_AMBIENT);
-        GLfloat mat_color_test[] = {0.0 ,1.0 ,0.0, 1.0};
-//        GLfloat mat_shininess[] = {64.0};
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_test);
-//        glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-//        qglColor(Qt::red);
-        glBegin(GL_QUADS);
-            glNormal3f(0,0,1);
-            glVertex3f(-50,-10,0);
-            glVertex3f(50,-10,0);
-            glVertex3f(50,100,0);
-            glVertex3f(-50,100,0);
-        glEnd();
-//            glDisable(GL_COLOR_MATERIAL);
-    glPopMatrix();
+    glEndList();
 
 }
 void SceneGL::drawGround()
@@ -516,23 +512,7 @@ void SceneGL::drawTexture_logo(float x, float y, int flag)
     glPopMatrix();
 }
 
-void SceneGL::loadTextures_target(){
-    QImage tex, buf;
-    if(!buf.load(":/images/texture/target.png"))
-    {
-        qWarning("Cannot open the image!");
-        QImage dummy(128, 128, QImage::Format_RGB32);
-        dummy.fill(Qt::white);
-        buf = dummy;
-    }
-    tex = convertToGLFormat(buf);
-    glGenTextures(1, &TARGET_texture_);
-    glBindTexture(GL_TEXTURE_2D, TARGET_texture_);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-}
 void SceneGL::draw_circle(const GLfloat radius,const GLuint num_vertex)
 {
     QImage tex, buf;
@@ -731,7 +711,30 @@ void SceneGL::drawCylinder(int flag)
             glRotatef(90, 0, 1, 0);
             gluCylinder(cylinder,0.1,0.1,0.8,32,32);
         }
-//        delete cylinder;
+        gluDeleteQuadric(cylinder);
+    glPopMatrix();
+}
+
+void SceneGL::drawSphere()
+{
+    glPushMatrix();
+        GLfloat mat_color_sphere[] = {0.4 ,0.4 ,0.4, 1.0};
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_sphere);
+        GLUquadric *sphere = gluNewQuadric();
+        gluSphere(sphere, 0.5, 32, 32);
+        gluDeleteQuadric(sphere);
+    glPopMatrix();
+}
+
+void SceneGL::drawConnecter()
+{
+    glPushMatrix();
+        GLfloat mat_color_connecter[] = {0.4 ,0.4 ,0.4, 1.0};
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_connecter);
+        glBegin(GL_LINE_STRIP);
+            glVertex3f(0, catapult_status_->getSphereYPos(), -7.5);
+            glVertex3f(0, catapult_status_->getTrebuchetBottomYPos(), catapult_status_->getTrebuchetBottomZPos());
+        glEnd();
     glPopMatrix();
 }
 

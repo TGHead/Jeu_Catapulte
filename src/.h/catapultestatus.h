@@ -9,6 +9,10 @@ class CatapulteStatus
 private:
     double angle_H_;
     double angle_trebuchet_;
+    double angle_sphere_;
+
+private:
+    void calAngleSphere();
 
 public:
     CatapulteStatus();
@@ -16,6 +20,10 @@ public:
     double getAngleTrebuchet() { return angle_trebuchet_; }
     void setAngleH(float h);
     void setAngleTrebuchet(float v);
+
+    double getSphereYPos();
+    double getTrebuchetBottomYPos();
+    double getTrebuchetBottomZPos();
 };
 
 #endif // CATAPULTESTATUS_H
