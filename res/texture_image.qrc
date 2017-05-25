@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/images">
         <file>texture/Logo_TSE.png</file>
+        <file>texture/target.png</file>
     </qresource>
 </RCC>
