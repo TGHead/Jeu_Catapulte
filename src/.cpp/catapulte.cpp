@@ -200,6 +200,9 @@ void Catapulte::Fire_Button__clicked()
 
     launched_ = true;
 
+    ui->SceneGL_->getCatapulteStatus()->AngleBackUp();
+    ui->SceneGL_->drawAnime();
+
     ui->Fire_Button_->setVisible(false);
     ui->Next_Button_->setVisible(true);
     ui->Replay_Button_->setVisible(true);
@@ -241,7 +244,8 @@ void Catapulte::Next_Button__clicked()
 
 void Catapulte::Replay_Button__clicked()
 {
-    qDebug()<<"call replay function.";
+    ui->SceneGL_->getCatapulteStatus()->AngleRecover();
+    ui->SceneGL_->drawAnime();
 }
 
 void Catapulte::GameSetting_Accepted()

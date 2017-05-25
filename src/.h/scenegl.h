@@ -13,6 +13,7 @@ class SceneGL : public QGLWidget
 public:
     explicit SceneGL(QWidget *parent = 0);
     ~SceneGL();
+    CatapulteStatus* getCatapulteStatus() {return catapult_status_;}
     void setCatapultAngle(float h, float v);
     void drawAnime();
 
