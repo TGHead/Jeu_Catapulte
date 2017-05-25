@@ -43,6 +43,8 @@ private:
     void drawCatapultBase();
     void drawHolder(float dx);
     void drawCylinder(int flag);
+    void drawSphere();
+    void drawConnecter();
 
     void drawTrebuchet();
     void drawLoad();

@@ -17,7 +17,7 @@ SceneGL::~SceneGL()
 {
     if(catapult_status_ != NULL)
         delete catapult_status_;
-
+    glDeleteTextures(1, &LOGO_texture_);
 }
 
 void SceneGL::setCatapultAngle(float h, float v)
@@ -138,6 +138,11 @@ void SceneGL::draw()
         glPushMatrix();
             glTranslatef(0, 0, 8);
             glPushMatrix();
+                glPushMatrix();
+                    glTranslatef(0, catapult_status_->getSphereYPos(), -7.5);
+                    drawSphere();
+                glPopMatrix();
+                drawConnecter();
                 glRotatef(catapult_status_->getAngleTrebuchet(), 1, 0, 0);
                 glCallList(trebuchet_);
             glPopMatrix();
@@ -630,7 +635,30 @@ void SceneGL::drawCylinder(int flag)
             glRotatef(90, 0, 1, 0);
             gluCylinder(cylinder,0.1,0.1,0.8,32,32);
         }
-//        delete cylinder;
+        gluDeleteQuadric(cylinder);
+    glPopMatrix();
+}
+
+void SceneGL::drawSphere()
+{
+    glPushMatrix();
+        GLfloat mat_color_sphere[] = {0.4 ,0.4 ,0.4, 1.0};
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_sphere);
+        GLUquadric *sphere = gluNewQuadric();
+        gluSphere(sphere, 0.5, 32, 32);
+        gluDeleteQuadric(sphere);
+    glPopMatrix();
+}
+
+void SceneGL::drawConnecter()
+{
+    glPushMatrix();
+        GLfloat mat_color_connecter[] = {0.4 ,0.4 ,0.4, 1.0};
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_connecter);
+        glBegin(GL_LINE_STRIP);
+            glVertex3f(0, catapult_status_->getSphereYPos(), -7.5);
+            glVertex3f(0, catapult_status_->getTrebuchetBottomYPos(), catapult_status_->getTrebuchetBottomZPos());
+        glEnd();
     glPopMatrix();
 }
 
