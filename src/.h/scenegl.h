@@ -14,6 +14,7 @@ public:
     explicit SceneGL(QWidget *parent = 0);
     ~SceneGL();
     void setCatapultAngle(float h, float v);
+    void drawAnime();
 
 protected:
     void initializeGL();

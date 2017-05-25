@@ -29,6 +29,11 @@ void SceneGL::setCatapultAngle(float h, float v)
     }
 }
 
+void SceneGL::drawAnime()
+{
+
+}
+
 static void NormalizeAngle(double &angle)
 {
     if(angle < 0)
