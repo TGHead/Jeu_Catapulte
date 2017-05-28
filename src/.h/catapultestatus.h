@@ -23,10 +23,13 @@ public:
     double getAngleSphere() { return angle_sphere_; }
     void setAngleH(float h);
     void setAngleTrebuchet(float v);
+    void setAngleTrebuchet(double angle);
 
     double getSphereYPos();
     double getTrebuchetBottomYPos();
     double getTrebuchetBottomZPos();
+
+    bool AngleTrebuchetReady();
 
     void AngleBackUp();
     void AngleRecover();

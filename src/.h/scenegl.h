@@ -2,7 +2,7 @@
 #define SCENEGL_H
 
 #include <QGLWidget>
-#include <openGL/glu.h>
+#include <GL/glu.h>
 #include <QtOpenGL>
 #include "catapultestatus.h"
 

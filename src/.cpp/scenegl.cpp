@@ -35,7 +35,18 @@ void SceneGL::setCatapultAngle(float h, float v)
 
 void SceneGL::drawAnime()
 {
-
+    double i = 1.0;
+    while(!catapult_status_->AngleTrebuchetReady())
+    {
+        catapult_status_->setAngleTrebuchet((double)(catapult_status_->getAngleTrebuchet() - 0.4 * i));
+        if(catapult_status_->getAngleTrebuchet() < 0)
+        {
+            i+=0.1;
+        }
+        updateGL();
+//        qDebug()<<catapult_status_->getAngleTrebuchet();
+//        QThread::sleep(100);
+    }
 }
 
 static void NormalizeAngle(double &angle)
@@ -143,7 +154,22 @@ void SceneGL::draw()
             glTranslatef(0, 0, 8);
             glPushMatrix();
                 glPushMatrix();
-                    glTranslatef(0, catapult_status_->getSphereYPos(), -7.5);
+                    if(!catapult_status_->AngleTrebuchetReady())
+                    {
+                        if(catapult_status_->getAngleTrebuchet() >= 0)
+                        {
+                            glTranslatef(0, catapult_status_->getSphereYPos(), -7.5);
+                        }
+                        else
+                        {
+                            glTranslatef(0, catapult_status_->getTrebuchetBottomYPos() + 7.5 * qSin(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI), catapult_status_->getTrebuchetBottomZPos() - qCos(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI) * 7.5);
+                            //                        qDebug()<<catapult_status_->getTrebuchetBottomYPos() - 7.5 * qSin(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI);
+                        }
+                    }
+                    else
+                    {
+
+                    }
                     drawSphere();
                 glPopMatrix();
                 drawConnecter();
@@ -732,7 +758,21 @@ void SceneGL::drawConnecter()
         GLfloat mat_color_connecter[] = {0.4 ,0.4 ,0.4, 1.0};
         glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_connecter);
         glBegin(GL_LINE_STRIP);
-            glVertex3f(0, catapult_status_->getSphereYPos(), -7.5);
+            if(!catapult_status_->AngleTrebuchetReady())
+            {
+                if(catapult_status_->getAngleTrebuchet() >= 0)
+                {
+                    glVertex3f(0, catapult_status_->getSphereYPos(), -7.5);
+                }
+                else
+                {
+                    glVertex3f(0, catapult_status_->getTrebuchetBottomYPos() + 7.5 * qSin(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI), catapult_status_->getTrebuchetBottomZPos() - qCos(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI) * 7.5);
+                }
+            }
+            else
+            {
+                glVertex3f(0, catapult_status_->getTrebuchetBottomYPos() + 7.5 * qSin(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI), catapult_status_->getTrebuchetBottomZPos() - qCos(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI) * 7.5);
+            }
             glVertex3f(0, catapult_status_->getTrebuchetBottomYPos(), catapult_status_->getTrebuchetBottomZPos());
         glEnd();
     glPopMatrix();
