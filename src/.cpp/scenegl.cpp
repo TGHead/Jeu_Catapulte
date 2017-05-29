@@ -11,6 +11,7 @@ SceneGL::SceneGL(QWidget *parent)
     cam_pos_vec_[0] = 100.0;cam_pos_vec_[1] = M_PI / 3;cam_pos_vec_[2] = M_PI * 3 / 2;
 
     catapult_status_ = NULL;
+    round = NULL;
 }
 
 SceneGL::~SceneGL()
@@ -180,10 +181,9 @@ void SceneGL::draw()
             glCallList(trebuchet_load_);
         glPopMatrix();
     glPopMatrix();
-    glPushMatrix();
-        glTranslatef(0,80,0.1);
-        draw_circle(10,100);
-    glPopMatrix();
+    if(round!=NULL){
+        draw_target();
+    }
 }
 
 void SceneGL::move_camera()
@@ -603,6 +603,22 @@ void SceneGL::draw_circle(const GLfloat radius,const GLuint num_vertex)
     glDisable(GL_TEXTURE_2D);
 }
 
+void SceneGL::draw_target(){
+    glPushMatrix();
+        glTranslatef(round->getPositionX(),round->getPositionY(),0.1);
+        switch (round->getLevel()) {
+        case EASY:
+            draw_circle(5,100);
+            break;
+        case NORMAL:
+            draw_circle(7.5,100);
+            break;
+        case HARD:
+            draw_circle(10,100);
+            break;
+        }
+    glPopMatrix();
+}
 
 void SceneGL::initCatapult()
 {

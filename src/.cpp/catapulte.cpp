@@ -133,7 +133,7 @@ void Catapulte::Capture_Button__clicked()
         delete round_;
 
     round_ = new GameRound(setting_->getLevel(), setting_->getPlayerName());
-
+    ui->SceneGL_->setRound(round_);
     captured_ = true;
 
     runtime_ = QTime(0, 0);
@@ -247,6 +247,7 @@ void Catapulte::Next_Button__clicked()
     ui->Fire_Button_->setVisible(true);
     ui->Next_Button_->setVisible(false);
     ui->Replay_Button_->setVisible(false);
+    round_->generatePostion();
 }
 
 void Catapulte::Replay_Button__clicked()

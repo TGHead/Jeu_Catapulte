@@ -1,4 +1,4 @@
-#include "gamesetting.h"
+#include "src/.h/gamesetting.h"
 #include "ui_gamesetting.h"
 
 GameSetting::GameSetting(QWidget *parent) :
@@ -58,3 +58,4 @@ QDialogButtonBox* GameSetting::getButtonBox()
 //{
 
 //}
+

@@ -2,9 +2,10 @@
 #define SCENEGL_H
 
 #include <QGLWidget>
-#include <GL/glu.h>
+#include <openGL/glu.h>
 #include <QtOpenGL>
 #include "catapultestatus.h"
+#include "gameround.h"
 
 class SceneGL : public QGLWidget
 {
@@ -15,6 +16,7 @@ public:
     ~SceneGL();
     CatapulteStatus* getCatapulteStatus() {return catapult_status_;}
     void setCatapultAngle(float h, float v);
+    void setRound(GameRound *R){round=R;}
     void drawAnime();
 
 protected:
@@ -40,6 +42,7 @@ private:
     void loadTextures_logo();
     void drawTexture_logo(float x, float y, int flag);
     void draw_circle(const GLfloat radius,const GLuint num_vertex);
+    void draw_target();
 
     void initCatapult();
     void drawCatapultBase();
@@ -65,6 +68,7 @@ private:
     GLuint catapult_base_;
     GLuint trebuchet_load_;
     GLuint trebuchet_;
+    GameRound *round;
 };
 
 #endif // SCENEGL_H

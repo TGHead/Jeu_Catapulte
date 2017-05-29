@@ -1,4 +1,6 @@
-#include "gameround.h"
+#include "src/.h/gameround.h"
+#include "QDebug"
+
 
 GameRound::GameRound(LEVEL level, QString player_name)
 {
@@ -10,6 +12,7 @@ GameRound::GameRound(LEVEL level, QString player_name)
     }
     Init_Round_Time();
     player_name_ = player_name;
+    generatePostion();
 }
 
 GameRound::~GameRound()
@@ -51,16 +54,12 @@ QString GameRound::getLevelText()
     switch (level_) {
     case EASY:
         return "Easy";
-        break;
     case NORMAL:
         return "Normal";
-        break;
     case HARD:
         return "Hard";
-        break;
     default:
         return "Easy";
-        break;
     }
 }
 
@@ -73,3 +72,12 @@ int GameRound::getSum_Scores()
     }
     return sum;
 }
+/*
+ * Generate the random position of the target with 80<x<135 and -35<y<35,only define the centre of the target
+ */
+void GameRound::generatePostion(){
+    srand((unsigned)time(NULL));
+    po.x=rand()%70-35;
+    po.y=rand()%55+80;
+}
+

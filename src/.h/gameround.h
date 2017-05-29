@@ -3,6 +3,8 @@
 
 #include "enum_level.h"
 #include <QTime>
+#include <time.h>
+
 
 class GameRound
 {
@@ -14,6 +16,11 @@ private:
     int scores_[10];
     QTime round_time_;
     QString player_name_;
+    typedef struct {
+        double x;
+        double y;
+    }Position;
+    Position po ;
 
 public:
 
@@ -34,6 +41,9 @@ public:
     int getScores(int N) { return scores_[N]; }
     int getSum_Scores();
     QTime getRound_Time(){ return round_time_; }
+    void generatePostion();
+    double getPositionX(){return po.x;}
+    double getPositionY(){return po.y;}
 
 };
 
