@@ -155,8 +155,8 @@ void SceneGL::draw()
         glPopMatrix();
     glPopMatrix();
     glPushMatrix();
-        glTranslatef(0,50,0.01);
-        draw_circle(5,100);
+        glTranslatef(0,80,0.1);
+        draw_circle(10,100);
     glPopMatrix();
 }
 
@@ -274,8 +274,8 @@ void SceneGL::drawGround()
             glNormal3f(0,0,1);
             glVertex3f(-50,-10,0);
             glVertex3f(50,-10,0);
-            glVertex3f(50,100,0);
-            glVertex3f(-50,100,0);
+            glVertex3f(50,150,0);
+            glVertex3f(-50,150,0);
         glEnd();
 //            glDisable(GL_COLOR_MATERIAL);
     glPopMatrix();
@@ -291,12 +291,12 @@ void SceneGL::drawBarbedWire()
         drawNet(x, y, flag_net);
         if(flag_tex)
             drawTexture_logo(x, y, flag_net);
-        if(x == -45 && y < 95)
+        if(x == -45 && y < 145)
         {
             y += 5;
-            flag_net = (y == 95) ? 1 : 0;
+            flag_net = (y == 145) ? 1 : 0;
         }
-        else if(y == 95 && x < 45)
+        else if(y == 145 && x < 45)
         {
             x += 5;
             flag_net = (x == 45) ? 2 : 1;
