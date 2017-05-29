@@ -20,6 +20,12 @@ void CatapulteStatus::setAngleTrebuchet(float v)
     calAngleSphere();
 }
 
+void CatapulteStatus::setAngleTrebuchet(double angle)
+{
+    angle_trebuchet_ = angle;
+    calAngleSphere();
+}
+
 void CatapulteStatus::calAngleSphere()
 {
     if(angle_trebuchet_ >= 0)
@@ -43,6 +49,14 @@ double CatapulteStatus::getTrebuchetBottomYPos()
 double CatapulteStatus::getTrebuchetBottomZPos()
 {
     return -17.0 * qSin(angle_trebuchet_ / 180.0 * M_PI);
+}
+
+bool CatapulteStatus::AngleTrebuchetReady()
+{
+    if(angle_trebuchet_ <= -90.0)
+    {
+        return true;
+    }
 }
 
 void CatapulteStatus::AngleBackUp()

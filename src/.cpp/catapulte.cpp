@@ -200,12 +200,19 @@ void Catapulte::Fire_Button__clicked()
 
     launched_ = true;
 
+    ui->Fire_Button_->setVisible(false);
+    ui->Next_Button_->setVisible(true);
+    ui->Next_Button_->setEnabled(false);
+    ui->Replay_Button_->setVisible(true);
+    ui->Replay_Button_->setEnabled(false);
+    ui->ReStart_Button_->setEnabled(false);
+
     ui->SceneGL_->getCatapulteStatus()->AngleBackUp();
     ui->SceneGL_->drawAnime();
 
-    ui->Fire_Button_->setVisible(false);
-    ui->Next_Button_->setVisible(true);
-    ui->Replay_Button_->setVisible(true);
+    ui->Next_Button_->setEnabled(true);
+    ui->Replay_Button_->setEnabled(true);
+    ui->ReStart_Button_->setEnabled(true);
 
     ui->Score_Table_->setRowCount(10 - round_->getR_left() + 1);
     ui->Score_Table_->setItem(10 - round_->getR_left(), 0, new QTableWidgetItem(QString("%1").arg(10 - round_->getR_left() + 1)));
@@ -244,8 +251,16 @@ void Catapulte::Next_Button__clicked()
 
 void Catapulte::Replay_Button__clicked()
 {
+    ui->Next_Button_->setEnabled(false);
+    ui->Replay_Button_->setEnabled(false);
+    ui->ReStart_Button_->setEnabled(false);
+
     ui->SceneGL_->getCatapulteStatus()->AngleRecover();
     ui->SceneGL_->drawAnime();
+
+    ui->Next_Button_->setEnabled(true);
+    ui->Replay_Button_->setEnabled(true);
+    ui->ReStart_Button_->setEnabled(true);
 }
 
 void Catapulte::GameSetting_Accepted()
