@@ -360,24 +360,39 @@ void SceneGL::initGlobalSceneList()
     glEndList();
 
 }
+/*
+ * draw the ground with 160*100
+ */
 void SceneGL::drawGround()
 {
+    loadTextures_herbe();
     glPushMatrix();
-//        glEnable(GL_COLOR_MATERIAL);
-//        glColorMaterial(GL_FRONT,GL_AMBIENT);
-        GLfloat mat_color_test[] = {0.0 ,1.0 ,0.0, 1.0};
-//        GLfloat mat_shininess[] = {64.0};
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_test);
-//        glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-//        qglColor(Qt::red);
-        glBegin(GL_QUADS);
-            glNormal3f(0,0,1);
-            glVertex3f(-50,-10,0);
-            glVertex3f(50,-10,0);
-            glVertex3f(50,150,0);
-            glVertex3f(-50,150,0);
-        glEnd();
-//            glDisable(GL_COLOR_MATERIAL);
+        glEnable(GL_TEXTURE_2D);
+        GLfloat mat_color_tex[] = {1.0 ,1.0 ,1.0, 1.0};
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_tex);
+            glBegin(GL_QUADS);
+                glNormal3f(0,0,1);
+                glTexCoord2f(0, 1);
+                glVertex3f(-50, -10, 0);
+                glTexCoord2f(1, 1);
+                glVertex3f(50,-10, 0);
+                glTexCoord2f(1, 0);
+                glVertex3f(50,70, 0);
+                glTexCoord2f(0, 0);
+                glVertex3f(-50,70, 0);
+            glEnd();
+            glBegin(GL_QUADS);
+                glNormal3f(0,0,1);
+                glTexCoord2f(0, 0);
+                glVertex3f(-50, 70, 0);
+                glTexCoord2f(1, 0);
+                glVertex3f(50,70, 0);
+                glTexCoord2f(1, 1);
+                glVertex3f(50,150, 0);
+                glTexCoord2f(0, 1);
+                glVertex3f(-50,150, 0);
+            glEnd();
+        glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 }
 
@@ -612,6 +627,25 @@ void SceneGL::drawTexture_logo(float x, float y, int flag)
     glPopMatrix();
 }
 
+void SceneGL::loadTextures_herbe(){
+    QImage tex, buf;
+    if(!buf.load(":/images/texture/herbe.jpg"))
+    {
+        qWarning("Cannot open the image!");
+        QImage dummy(128, 128, QImage::Format_RGB32);
+        dummy.fill(Qt::white);
+        buf = dummy;
+    }
+    tex = convertToGLFormat(buf);
+    glGenTextures(1, &HERBE_texture_);
+    glBindTexture(GL_TEXTURE_2D, HERBE_texture_);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, tex.width(), tex.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.bits());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+}
 
 void SceneGL::draw_circle(const GLfloat radius,const GLuint num_vertex)
 {

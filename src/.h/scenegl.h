@@ -2,7 +2,7 @@
 #define SCENEGL_H
 
 #include <QGLWidget>
-#include <GL/glu.h>
+#include <openGL/glu.h>
 #include <QtOpenGL>
 #include "catapultestatus.h"
 #include "gameround.h"
@@ -44,6 +44,7 @@ private:
     void drawNet(float x, float y, int flag);
     void loadTextures_logo();
     void drawTexture_logo(float x, float y, int flag);
+    void loadTextures_herbe();
     void draw_circle(const GLfloat radius,const GLuint num_vertex);
     void draw_target();
 
@@ -70,6 +71,7 @@ private:
 
     GLuint LOGO_texture_;
     GLuint TARGET_texture_;
+    GLuint HERBE_texture_;
 
     GLuint global_scene_list_;
     GLuint catapult_base_;
