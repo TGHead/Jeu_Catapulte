@@ -2,5 +2,6 @@
     <qresource prefix="/images">
         <file>texture/Logo_TSE.png</file>
         <file>texture/target.png</file>
+        <file>texture/herbe.jpg</file>
     </qresource>
 </RCC>
