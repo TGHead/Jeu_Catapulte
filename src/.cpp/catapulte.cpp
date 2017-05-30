@@ -134,6 +134,7 @@ void Catapulte::Capture_Button__clicked()
 
     round_ = new GameRound(setting_->getLevel(), setting_->getPlayerName());
     ui->SceneGL_->setRound(round_);
+    ui->SceneGL_->updateGL();
     captured_ = true;
 
     runtime_ = QTime(0, 0);
@@ -191,6 +192,7 @@ void Catapulte::Restart_Button__clicked()
         started_ = false;
 
         ui->SceneGL_->setCatapultAngle(0.5,1);
+        ui->SceneGL_->setRound(NULL);
         ui->SceneGL_->updateGL();
     }
 }
@@ -208,6 +210,7 @@ void Catapulte::Fire_Button__clicked()
     ui->ReStart_Button_->setEnabled(false);
 
     ui->SceneGL_->getCatapulteStatus()->AngleBackUp();
+//    ui->SceneGL_->getCatapulteStatus()->setHSpeed();
     ui->SceneGL_->drawAnime();
 
     ui->Next_Button_->setEnabled(true);

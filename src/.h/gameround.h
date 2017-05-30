@@ -34,6 +34,8 @@ public:
     void Init_Round_Time();
     void Round_Time_add1s();
 
+    void calculScore(double d);
+
     LEVEL getLevel() { return level_; }
     QString getLevelText();
     QString getPlayerName() { return player_name_; }

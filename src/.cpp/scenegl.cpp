@@ -45,9 +45,22 @@ void SceneGL::drawAnime()
             i+=0.1;
         }
         updateGL();
-//        qDebug()<<catapult_status_->getAngleTrebuchet();
-//        QThread::sleep(100);
     }
+    catapult_status_->setHSpeed();
+    i = 1;
+    while(!catapult_status_->SphereOutofBounds())
+    {
+        updateGL();
+        catapult_status_->SphereZDecrement(0.1 + 0.001 * (i++));
+    }
+    round->calculScore(qSqrt(qPow((catapult_status_->getHSpeed() * qSqrt(2 * (32.5 - catapult_status_ -> getSphereZ()) / 9.8)) * qSin(-catapult_status_->getAngleH() / 180.0 * M_PI) -
+                                  round->getPositionX(), 2) +
+                             qPow((catapult_status_->getHSpeed() * qSqrt(2 * (32.5 - catapult_status_ -> getSphereZ()) / 9.8)) * qCos(catapult_status_->getAngleH() / 180.0 * M_PI) + 5 -
+                                  round->getPositionY(), 2)));
+//    qDebug()<<"1"<<(catapult_status_->getHSpeed() * qSqrt(2 * (32.5 - catapult_status_ -> getSphereZ()) / 9.8)) * qSin(-catapult_status_->getAngleH() / 180.0 * M_PI);
+//    qDebug()<<"2"<<round->getPositionX();
+//    qDebug()<<"3"<<(catapult_status_->getHSpeed() * qSqrt(2 * (32.5 - catapult_status_ -> getSphereZ()) / 9.8)) * qCos(catapult_status_->getAngleH() / 180.0 * M_PI) + 5;
+//    qDebug()<<"4"<<round->getPositionY();
 }
 
 static void NormalizeAngle(double &angle)
@@ -164,12 +177,11 @@ void SceneGL::draw()
                         else
                         {
                             glTranslatef(0, catapult_status_->getTrebuchetBottomYPos() + 7.5 * qSin(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI), catapult_status_->getTrebuchetBottomZPos() - qCos(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI) * 7.5);
-                            //                        qDebug()<<catapult_status_->getTrebuchetBottomYPos() - 7.5 * qSin(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI);
                         }
                     }
                     else
                     {
-
+                        glTranslatef(0, catapult_status_->getHSpeed() * qSqrt(2 * (32.5 - catapult_status_ -> getSphereZ()) / 9.8), catapult_status_->getSphereZ() - 8);
                     }
                     drawSphere();
                 glPopMatrix();
@@ -608,13 +620,13 @@ void SceneGL::draw_target(){
         glTranslatef(round->getPositionX(),round->getPositionY(),0.1);
         switch (round->getLevel()) {
         case EASY:
-            draw_circle(5,100);
+            draw_circle(10,100);
             break;
         case NORMAL:
             draw_circle(7.5,100);
             break;
         case HARD:
-            draw_circle(10,100);
+            draw_circle(5,100);
             break;
         }
     glPopMatrix();

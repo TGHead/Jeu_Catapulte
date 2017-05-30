@@ -13,6 +13,9 @@ private:
 
     double angle_backup[3];
 
+    double H_speed_;
+    double Sphere_Z_;
+
 private:
     void calAngleSphere();
 
@@ -24,12 +27,18 @@ public:
     void setAngleH(float h);
     void setAngleTrebuchet(float v);
     void setAngleTrebuchet(double angle);
+    void setHSpeed();
 
     double getSphereYPos();
     double getTrebuchetBottomYPos();
     double getTrebuchetBottomZPos();
 
+    double getHSpeed(){ return H_speed_; }
+    double getSphereZ() {return Sphere_Z_;}
+    void SphereZDecrement(double delta){ Sphere_Z_ -= delta; }
+
     bool AngleTrebuchetReady();
+    bool SphereOutofBounds();
 
     void AngleBackUp();
     void AngleRecover();

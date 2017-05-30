@@ -49,6 +49,31 @@ void GameRound::Round_Time_add1s()
     round_time_ = round_time_.addSecs(1);
 }
 
+void GameRound::calculScore(double d)
+{
+//    qDebug()<<"d:"<<d;
+    switch (level_) {
+    case EASY:
+        if(d <= 10.0)
+        {
+            setScores(10 - getR_left(), 10 - ((int)d % 10));
+        }
+        break;
+    case NORMAL:
+        if(d <= 7.5)
+        {
+            setScores(10 - getR_left(), 10 - ((int)(d / 7.5 * 10) % 10));
+        }
+        break;
+    case HARD:
+        if(d <= 5.0)
+        {
+            setScores(10 - getR_left(), 10 - ((int)(d * 2) % 10));
+        }
+        break;
+    }
+}
+
 QString GameRound::getLevelText()
 {
     switch (level_) {
