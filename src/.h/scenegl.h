@@ -18,6 +18,9 @@ public:
     void setCatapultAngle(float h, float v);
     void setRound(GameRound *R){round=R;}
     void drawAnime();
+    void setFiringFlag(bool flag) { firing_ = flag; }
+//    void cameraBackup();
+//    void cameraRecover();
 
 protected:
     void initializeGL();
@@ -59,6 +62,10 @@ private:
 
     double target_pos_[3];// record the center of the viewport which the camera point to.
     double cam_pos_vec_[3]; //record a vector which points to the camera's position from the target center.
+
+    double target_pos_backup_[3];
+    double cam_pos_vec_backup_[3];
+
     QPoint lastPos_;
 
     GLuint LOGO_texture_;
@@ -69,6 +76,7 @@ private:
     GLuint trebuchet_load_;
     GLuint trebuchet_;
     GameRound *round;
+    bool firing_;
 };
 
 #endif // SCENEGL_H

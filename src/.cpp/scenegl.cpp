@@ -7,11 +7,14 @@ SceneGL::SceneGL(QWidget *parent)
      * [1]:angle( theta ),
      * [2]:angle( phi )
         unit of angle : rad*/
-    target_pos_[0] = 0.0; target_pos_[1] = 0.0; target_pos_[2] = 0.0;
-    cam_pos_vec_[0] = 100.0;cam_pos_vec_[1] = M_PI / 3;cam_pos_vec_[2] = M_PI * 3 / 2;
+//    target_pos_[0] = 0.0; target_pos_[1] = 0.0; target_pos_[2] = 0.0;
+//    cam_pos_vec_[0] = 100.0;cam_pos_vec_[1] = M_PI / 3;cam_pos_vec_[2] = M_PI * 3 / 2;
+    target_pos_[0] = 20.1493; target_pos_[1] = 0.733772; target_pos_[2] = 1.88334;
+    cam_pos_vec_[0] = 159.0;cam_pos_vec_[1] = 1.0015;cam_pos_vec_[2] = 4.35825;
 
     catapult_status_ = NULL;
     round = NULL;
+    firing_ = false;
 }
 
 SceneGL::~SceneGL()
@@ -36,6 +39,9 @@ void SceneGL::setCatapultAngle(float h, float v)
 
 void SceneGL::drawAnime()
 {
+    firing_ = true;
+//    cameraBackup();
+
     double i = 1.0;
     while(!catapult_status_->AngleTrebuchetReady())
     {
@@ -61,7 +67,23 @@ void SceneGL::drawAnime()
 //    qDebug()<<"2"<<round->getPositionX();
 //    qDebug()<<"3"<<(catapult_status_->getHSpeed() * qSqrt(2 * (32.5 - catapult_status_ -> getSphereZ()) / 9.8)) * qCos(catapult_status_->getAngleH() / 180.0 * M_PI) + 5;
 //    qDebug()<<"4"<<round->getPositionY();
+
+//    firing_ = false;
+//    cameraRecover();
+//    updateGL();
 }
+
+//void SceneGL::cameraBackup()
+//{
+//    target_pos_backup_[0] = target_pos_[0]; target_pos_backup_[1] = target_pos_[1]; target_pos_backup_[2] = target_pos_[2];
+//    cam_pos_vec_backup_[0] = cam_pos_vec_[0]; cam_pos_vec_backup_[1] = cam_pos_vec_[1]; cam_pos_vec_backup_[2] = cam_pos_vec_[2];
+//}
+
+//void SceneGL::cameraRecover()
+//{
+//    target_pos_[0] = target_pos_backup_[0]; target_pos_[1] = target_pos_backup_[1]; target_pos_[2] = target_pos_backup_[2];
+//    cam_pos_vec_[0] = cam_pos_vec_backup_[0]; cam_pos_vec_[1] = cam_pos_vec_backup_[1]; cam_pos_vec_[1] = cam_pos_vec_backup_[1];
+//}
 
 static void NormalizeAngle(double &angle)
 {
@@ -205,21 +227,61 @@ void SceneGL::move_camera()
     {
         vec_up_theta += 2 * M_PI;
     }
-    gluLookAt(target_pos_[0] * qSin(target_pos_[1]) * qCos(target_pos_[2]) +
-              cam_pos_vec_[0] * qSin(cam_pos_vec_[1]) * qCos(cam_pos_vec_[2]),
-              target_pos_[0] * qSin(target_pos_[1]) * qSin(target_pos_[2]) +
-              cam_pos_vec_[0] * qSin(cam_pos_vec_[1]) * qSin(cam_pos_vec_[2]),
-              target_pos_[0] * qCos(target_pos_[1]) +
-              cam_pos_vec_[0] * qCos(cam_pos_vec_[1]),
+    if(firing_)
+    {
+        double cam_center[3];
+        if(!catapult_status_->AngleTrebuchetReady())
+        {
+            if(catapult_status_->getAngleTrebuchet() >= 0)
+            {
+                cam_center[0] = catapult_status_->getSphereYPos() * qSin(-catapult_status_->getAngleH() / 180.0 * M_PI);
+                cam_center[1] = catapult_status_->getSphereYPos() * qCos(catapult_status_->getAngleH() / 180.0 * M_PI) + 5;
+                cam_center[2] = 0;
+            }
+            else
+            {
+                cam_center[0] = (catapult_status_->getTrebuchetBottomYPos() + 7.5 * qSin(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI)) * qSin(-catapult_status_->getAngleH() / 180.0 * M_PI);
+                cam_center[1] = (catapult_status_->getTrebuchetBottomYPos() + 7.5 * qSin(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI)) * qCos(catapult_status_->getAngleH() / 180.0 * M_PI) + 5;
+                cam_center[2] = catapult_status_->getTrebuchetBottomZPos() - qCos(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI) * 7.5 + 7.5;
+//                glTranslatef(0, catapult_status_->getTrebuchetBottomYPos() + 7.5 * qSin(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI), catapult_status_->getTrebuchetBottomZPos() - qCos(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI) * 7.5);
+            }
+        }
+        else
+        {
+            cam_center[0] = catapult_status_->getHSpeed() * qSqrt(2 * (32.5 - catapult_status_ -> getSphereZ()) / 9.8) * qSin(-catapult_status_->getAngleH() / 180.0 * M_PI);
+            cam_center[1] = catapult_status_->getHSpeed() * qSqrt(2 * (32.5 - catapult_status_ -> getSphereZ()) / 9.8) * qCos(catapult_status_->getAngleH() / 180.0 * M_PI) + 5;
+            cam_center[2] = catapult_status_->getSphereZ() - 0.5;
+//            glTranslatef(0, catapult_status_->getHSpeed() * qSqrt(2 * (32.5 - catapult_status_ -> getSphereZ()) / 9.8), catapult_status_->getSphereZ() - 8);
+        }
+        gluLookAt(cam_center[0] + cam_pos_vec_[0] * qSin(cam_pos_vec_[1]) * qCos(cam_pos_vec_[2]),
+                  cam_center[1] + cam_pos_vec_[0] * qSin(cam_pos_vec_[1]) * qSin(cam_pos_vec_[2]),
+                  cam_center[2] + cam_pos_vec_[0] * qCos(cam_pos_vec_[1]),
 
-              target_pos_[0] * qSin(target_pos_[1]) * qCos(target_pos_[2]),
-              target_pos_[0] * qSin(target_pos_[1]) * qSin(target_pos_[2]),
-              target_pos_[0] * qCos(target_pos_[1]),
+                  cam_center[0], cam_center[1], cam_center[2],
 
-              1.0 * qSin(vec_up_theta) * qCos(cam_pos_vec_[2]),
-              1.0 * qSin(vec_up_theta) * qSin(cam_pos_vec_[2]),
-              1.0 * qCos(vec_up_theta));
-//    qDebug()<<cam_pos_vec_[1]<<" "<<cam_pos_vec_[2];
+                  1.0 * qSin(vec_up_theta) * qCos(cam_pos_vec_[2]),
+                  1.0 * qSin(vec_up_theta) * qSin(cam_pos_vec_[2]),
+                  1.0 * qCos(vec_up_theta));
+    }
+    else
+    {
+        gluLookAt(target_pos_[0] * qSin(target_pos_[1]) * qCos(target_pos_[2]) +
+                cam_pos_vec_[0] * qSin(cam_pos_vec_[1]) * qCos(cam_pos_vec_[2]),
+                target_pos_[0] * qSin(target_pos_[1]) * qSin(target_pos_[2]) +
+                cam_pos_vec_[0] * qSin(cam_pos_vec_[1]) * qSin(cam_pos_vec_[2]),
+                target_pos_[0] * qCos(target_pos_[1]) +
+                cam_pos_vec_[0] * qCos(cam_pos_vec_[1]),
+
+                target_pos_[0] * qSin(target_pos_[1]) * qCos(target_pos_[2]),
+                target_pos_[0] * qSin(target_pos_[1]) * qSin(target_pos_[2]),
+                target_pos_[0] * qCos(target_pos_[1]),
+
+                1.0 * qSin(vec_up_theta) * qCos(cam_pos_vec_[2]),
+                1.0 * qSin(vec_up_theta) * qSin(cam_pos_vec_[2]),
+                1.0 * qCos(vec_up_theta));
+    }
+//    qDebug()<<"camera center:"<<target_pos_[0]<<target_pos_[1]<<target_pos_[2];
+//    qDebug()<<"camera vector:"<<cam_pos_vec_[0]<<cam_pos_vec_[1]<<cam_pos_vec_[2];
 }
 
 void SceneGL::rotate_camera(double X, double Y)

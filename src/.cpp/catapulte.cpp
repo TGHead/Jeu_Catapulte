@@ -136,6 +136,7 @@ void Catapulte::Capture_Button__clicked()
     ui->SceneGL_->setRound(round_);
     ui->SceneGL_->updateGL();
     captured_ = true;
+    launched_ = false;
 
     runtime_ = QTime(0, 0);
     g_timer_->start(1000);
@@ -210,8 +211,10 @@ void Catapulte::Fire_Button__clicked()
     ui->ReStart_Button_->setEnabled(false);
 
     ui->SceneGL_->getCatapulteStatus()->AngleBackUp();
+//    ui->SceneGL_->cameraBackup();
 //    ui->SceneGL_->getCatapulteStatus()->setHSpeed();
     ui->SceneGL_->drawAnime();
+//    ui->SceneGL_->cameraRecover();
 
     ui->Next_Button_->setEnabled(true);
     ui->Replay_Button_->setEnabled(true);
@@ -246,6 +249,8 @@ void Catapulte::Fire_Button__clicked()
 void Catapulte::Next_Button__clicked()
 {
     launched_ = false;
+    ui->SceneGL_->setFiringFlag(false);
+    ui->SceneGL_->updateGL();
 
     ui->Fire_Button_->setVisible(true);
     ui->Next_Button_->setVisible(false);
@@ -304,7 +309,7 @@ void Catapulte::afficherImage()
             double minVal; double maxVal; Point minLoc; Point maxLoc;
             minMaxLoc( resultImage, &minVal, &maxVal, &minLoc, &maxLoc, Mat() );
 
-            if(launched_ == false)
+            if(!launched_)
             {
                 ui->SceneGL_->setCatapultAngle((float)maxLoc.x/(float)webCam_->get(CV_CAP_PROP_FRAME_WIDTH),
                                                (float)maxLoc.y/(float)webCam_->get(CV_CAP_PROP_FRAME_HEIGHT));
