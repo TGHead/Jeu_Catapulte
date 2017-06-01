@@ -39,6 +39,8 @@ private:
     GameRound *round_;
     GameSetting *setting_;
 
+    Point last_Pos_;
+
 private slots:
     void Start_Button__clicked();
     void Capture_Button__clicked();
@@ -53,6 +55,9 @@ private slots:
     void afficherImage();
     void afficherGlobalTime();
     void afficherRoundTime();
+
+signals:
+    void launch();
 };
 
 #endif // CATAPULTE_H

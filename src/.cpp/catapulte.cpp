@@ -92,6 +92,7 @@ void Catapulte::Start_Button__clicked()
         connect(ui->Capture_Button_, SIGNAL(clicked()), this, SLOT(Capture_Button__clicked()));
         connect(ui->ReStart_Button_, SIGNAL(clicked()), this, SLOT(Restart_Button__clicked()));
         connect(ui->Fire_Button_, SIGNAL(clicked()), this, SLOT(Fire_Button__clicked()));
+        connect(this, SIGNAL(launch()), this, SLOT(Fire_Button__clicked()));
         connect(ui->Next_Button_, SIGNAL(clicked()), this, SLOT(Next_Button__clicked()));
         connect(ui->Replay_Button_, SIGNAL(clicked()), this, SLOT(Replay_Button__clicked()));
 
@@ -297,6 +298,8 @@ void Catapulte::afficherImage()
         if(captured_ == false)
         {
             Rect templateRect(webCam_->get(CV_CAP_PROP_FRAME_WIDTH)/2 - 48,webCam_->get(CV_CAP_PROP_FRAME_HEIGHT)/2 - 48,96,96);
+            last_Pos_.x = webCam_->get(CV_CAP_PROP_FRAME_WIDTH)/2;
+            last_Pos_.y = webCam_->get(CV_CAP_PROP_FRAME_HEIGHT)/2;
             templateImage_=Mat(image,templateRect).clone();
             cvtColor(image,image,CV_BGR2RGB);
             rectangle(image,templateRect,Scalar( 255, 0, 0),2,8,0);
@@ -312,7 +315,9 @@ void Catapulte::afficherImage()
 
             double minVal; double maxVal; Point minLoc; Point maxLoc;
             minMaxLoc( resultImage, &minVal, &maxVal, &minLoc, &maxLoc, Mat() );
-
+//            qDebug()<<maxLoc.y - last_Pos_.y;
+            if(maxLoc.y - last_Pos_.y > 100 && !launched_) emit launch();
+            last_Pos_ = maxLoc;
             if(!launched_)
             {
                 ui->SceneGL_->setCatapultAngle((float)maxLoc.x/(float)webCam_->get(CV_CAP_PROP_FRAME_WIDTH),

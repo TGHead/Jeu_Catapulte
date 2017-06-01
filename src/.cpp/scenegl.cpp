@@ -670,9 +670,11 @@ void SceneGL::draw_circle(const GLfloat radius,const GLuint num_vertex)
 
     const GLfloat delta_angle = 2.0*M_PI/num_vertex;
 
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D,TARGET_texture_);
-    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+    glEnable(GL_TEXTURE_2D);
+//    glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+    GLfloat mat_color_tex[] = {1.0 ,1.0 ,1.0, 0.0};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_tex);
     glBegin(GL_TRIANGLE_FAN);
 
     glNormal3f(0, 0, 1);
