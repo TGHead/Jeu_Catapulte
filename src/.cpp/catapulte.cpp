@@ -316,7 +316,7 @@ void Catapulte::afficherImage()
             double minVal; double maxVal; Point minLoc; Point maxLoc;
             minMaxLoc( resultImage, &minVal, &maxVal, &minLoc, &maxLoc, Mat() );
 //            qDebug()<<maxLoc.y - last_Pos_.y;
-            if(maxLoc.y - last_Pos_.y > 100 && !launched_) emit launch();
+            if(maxLoc.y - last_Pos_.y > 100 && !launched_ && round_->getR_left() != 0) emit launch();
             last_Pos_ = maxLoc;
             if(!launched_)
             {

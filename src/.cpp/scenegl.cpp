@@ -1,4 +1,5 @@
 #include "src/.h/scenegl.h"
+#include <iostream>
 
 SceneGL::SceneGL(QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
@@ -200,11 +201,14 @@ void SceneGL::draw()
                         {
                             glTranslatef(0, catapult_status_->getTrebuchetBottomYPos() + 7.5 * qSin(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI), catapult_status_->getTrebuchetBottomZPos() - qCos(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI) * 7.5);
                         }
+//                        glTranslatef(0, 0, 3);
                     }
                     else
                     {
                         glTranslatef(0, catapult_status_->getHSpeed() * qSqrt(2 * (32.5 - catapult_status_ -> getSphereZ()) / 9.8), catapult_status_->getSphereZ() - 8);
+//                        glTranslatef(0, 0, 3);
                     }
+//                    glTranslatef(0, 0, 3);
                     drawSphere();
                 glPopMatrix();
                 drawConnecter();
@@ -215,7 +219,7 @@ void SceneGL::draw()
             glCallList(trebuchet_load_);
         glPopMatrix();
     glPopMatrix();
-    if(round!=NULL){
+    if(round!=NULL && round->getR_left()!=0){
         draw_target();
     }
 }

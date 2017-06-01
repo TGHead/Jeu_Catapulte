@@ -66,6 +66,7 @@ bool CatapulteStatus::AngleTrebuchetReady()
     {
         return true;
     }
+    else return false;
 }
 
 bool CatapulteStatus::SphereOutofBounds()
