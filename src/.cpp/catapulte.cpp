@@ -108,6 +108,7 @@ void Catapulte::Start_Button__clicked()
 
 void Catapulte::Capture_Button__clicked()
 {
+    ui->Fire_Button_->setEnabled(true);
     ui->Capture_Button_->setEnabled(false);
     ui->Capture_Button_->setVisible(false);
 

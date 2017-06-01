@@ -1,5 +1,4 @@
 #include "src/.h/scenegl.h"
-#include <iostream>
 
 SceneGL::SceneGL(QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
@@ -25,6 +24,7 @@ SceneGL::~SceneGL()
 
     glDeleteTextures (1, &TARGET_texture_);
     glDeleteTextures (1, &LOGO_texture_);
+    glDeleteTextures(1, &HERBE_texture_);
 
 
 }
@@ -201,14 +201,11 @@ void SceneGL::draw()
                         {
                             glTranslatef(0, catapult_status_->getTrebuchetBottomYPos() + 7.5 * qSin(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI), catapult_status_->getTrebuchetBottomZPos() - qCos(catapult_status_->getAngleTrebuchet() * 2 / 180.0 * M_PI) * 7.5);
                         }
-//                        glTranslatef(0, 0, 3);
                     }
                     else
                     {
                         glTranslatef(0, catapult_status_->getHSpeed() * qSqrt(2 * (32.5 - catapult_status_ -> getSphereZ()) / 9.8), catapult_status_->getSphereZ() - 8);
-//                        glTranslatef(0, 0, 3);
                     }
-//                    glTranslatef(0, 0, 3);
                     drawSphere();
                 glPopMatrix();
                 drawConnecter();
@@ -716,6 +713,7 @@ void SceneGL::draw_circle(const GLfloat radius,const GLuint num_vertex)
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
+    glDeleteTextures(1, &TARGET_texture_);
 }
 
 void SceneGL::draw_target(){
