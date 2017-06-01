@@ -675,6 +675,7 @@ void SceneGL::draw_circle(const GLfloat radius,const GLuint num_vertex)
     glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
     glBegin(GL_TRIANGLE_FAN);
 
+    glNormal3f(0, 0, 1);
     //draw the vertex at the center of the circle
     texcoord[0] = 0.5;
     texcoord[1] = 0.5;

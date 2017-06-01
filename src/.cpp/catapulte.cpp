@@ -200,7 +200,7 @@ void Catapulte::Restart_Button__clicked()
 
 void Catapulte::Fire_Button__clicked()
 {
-
+    g_timer_->stop();
     launched_ = true;
 
     ui->Fire_Button_->setVisible(false);
@@ -233,9 +233,9 @@ void Catapulte::Fire_Button__clicked()
     }
 
     round_->setR_left(round_->getR_left() - 1);
-    round_->Init_Round_Time();
+//    round_->Init_Round_Time();
 
-    ui->v_target_time_->setText(round_->getRound_Time().toString());
+//    ui->v_target_time_->setText(round_->getRound_Time().toString());
     ui->v_target_left_->setText(QString("%1").arg(round_->getR_left()));
     ui->v_scores_->setText(QString("%1").arg(round_->getSum_Scores()));
 
@@ -248,6 +248,10 @@ void Catapulte::Fire_Button__clicked()
 
 void Catapulte::Next_Button__clicked()
 {
+    round_->Init_Round_Time();
+    ui->v_target_time_->setText(round_->getRound_Time().toString());
+    g_timer_->start(1000);
+
     launched_ = false;
     ui->SceneGL_->setFiringFlag(false);
     ui->SceneGL_->updateGL();
