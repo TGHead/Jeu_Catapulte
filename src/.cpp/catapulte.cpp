@@ -266,16 +266,16 @@ void Catapulte::Next_Button__clicked()
 
 void Catapulte::Replay_Button__clicked()
 {
-    ui->Next_Button_->setEnabled(false);
-    ui->Replay_Button_->setEnabled(false);
-    ui->ReStart_Button_->setEnabled(false);
+//    ui->Next_Button_->setEnabled(false);
+//    ui->Replay_Button_->setEnabled(false);
+//    ui->ReStart_Button_->setEnabled(false);
 
     ui->SceneGL_->getCatapulteStatus()->AngleRecover();
     ui->SceneGL_->drawAnime();
 
-    ui->Next_Button_->setEnabled(true);
-    ui->Replay_Button_->setEnabled(true);
-    ui->ReStart_Button_->setEnabled(true);
+//    ui->Next_Button_->setEnabled(true);
+//    ui->Replay_Button_->setEnabled(true);
+//    ui->ReStart_Button_->setEnabled(true);
 }
 
 void Catapulte::GameSetting_Accepted()
