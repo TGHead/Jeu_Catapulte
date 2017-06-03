@@ -3,8 +3,6 @@
 
 #include <QGraphicsView>
 
-#include <QDebug>
-
 Catapulte::Catapulte(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Catapulte)
@@ -193,8 +191,9 @@ void Catapulte::Restart_Button__clicked()
         g_timer_->stop();
 
         started_ = false;
+        ui->SceneGL_->setFiringFlag(false);
 
-        ui->SceneGL_->setCatapultAngle(0.5,1);
+        ui->SceneGL_->setCatapultAngle(0.425,0.8);
         ui->SceneGL_->setRound(NULL);
         ui->SceneGL_->updateGL();
     }
@@ -245,6 +244,7 @@ void Catapulte::Fire_Button__clicked()
     {
         g_timer_->stop();
         ui->Fire_Button_->setEnabled(false);
+        ui->Next_Button_->setEnabled(false);
     }
 }
 

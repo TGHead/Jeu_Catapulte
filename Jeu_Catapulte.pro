@@ -56,3 +56,6 @@ LIBS += -L$$(OPENCV_DIR)\lib \
 
 RESOURCES += \
     res/texture_image.qrc
+
+# RC_ICONS = /res/icon/catapulte.ico
+RC_FILE = ./res/icon/icon.rc

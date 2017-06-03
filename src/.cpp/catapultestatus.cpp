@@ -1,5 +1,4 @@
 #include "src/.h/catapultestatus.h"
-#include <QDebug>
 
 CatapulteStatus::CatapulteStatus()
 {
@@ -75,7 +74,7 @@ bool CatapulteStatus::SphereOutofBounds()
     {
         return true;
     }
-    else if(H_speed_ * qSqrt( 2 * (32.5 - Sphere_Z_) / 9.8) * qSin(qAbs(angle_H_) / 180.0 * M_PI) >= 45)
+    else if(H_speed_ * qSqrt( 2 * (32.5 - Sphere_Z_) / 9.8) * qSin(qAbs(angle_H_) / 180.0 * M_PI) >= 45 || H_speed_ * qSqrt( 2 * (32.5 - Sphere_Z_) / 9.8) * qCos(qAbs(angle_H_) / 180.0 * M_PI) >= 140)
     {
         return true;
     }

@@ -33,8 +33,8 @@ void SceneGL::setCatapultAngle(float h, float v)
 {
     if(catapult_status_ !=NULL)
     {
-        catapult_status_->setAngleH(h);
-        catapult_status_->setAngleTrebuchet(v);
+        catapult_status_->setAngleH(h/0.85);
+        catapult_status_->setAngleTrebuchet((float)(v/0.8));
     }
 }
 
@@ -46,12 +46,12 @@ void SceneGL::drawAnime()
     double i = 1.0;
     while(!catapult_status_->AngleTrebuchetReady())
     {
+        updateGL();
         catapult_status_->setAngleTrebuchet((double)(catapult_status_->getAngleTrebuchet() - 0.4 * i));
         if(catapult_status_->getAngleTrebuchet() < 0)
         {
             i+=0.1;
         }
-        updateGL();
     }
     catapult_status_->setHSpeed();
     i = 1;
@@ -216,7 +216,7 @@ void SceneGL::draw()
             glCallList(trebuchet_load_);
         glPopMatrix();
     glPopMatrix();
-    if(round!=NULL && round->getR_left()!=0){
+    if(round!=NULL){
         draw_target();
     }
 }
@@ -587,8 +587,8 @@ void SceneGL::drawTexture_logo(float x, float y, int flag)
     if(flag == 3) return;
     glPushMatrix();
         glEnable(GL_TEXTURE_2D);
-        GLfloat mat_color_tex[] = {1.0 ,1.0 ,1.0, 0.0};
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_tex);
+        GLfloat mat_color_tex[] = {1.0 ,1.0 ,1.0, 1.0};
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_color_tex);
         glBegin(GL_QUADS);
             if(flag == 0)
             {
@@ -757,12 +757,13 @@ void SceneGL::drawCatapultBase()
 //        GLfloat mat_color_base[] = {0.6 ,0.6 ,0.6, 1.0};
         glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_color_base);
         glBegin(GL_QUAD_STRIP);
-            glNormal3f(0, 0, -1);
-            glVertex3f(3, 6, 0);
-            glVertex3f(-3, 6, 0);
+//            glNormal3f(0, 0, -1);
+//            glVertex3f(3, 6, 0);
+//            glVertex3f(-3, 6, 0);
+            glNormal3f(0, -1, 0);
             glVertex3f(3, -6, 0);
             glVertex3f(-3, -6, 0);
-            glNormal3f(0, -1, 0);
+//            glNormal3f(0, -1, 0);
             glVertex3f(3, -6, 0.2);
             glVertex3f(-3, -6, 0.2);
             glNormal3f(0, 0, 1);

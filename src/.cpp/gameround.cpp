@@ -1,5 +1,4 @@
 #include "src/.h/gameround.h"
-#include "QDebug"
 
 
 GameRound::GameRound(LEVEL level, QString player_name)
