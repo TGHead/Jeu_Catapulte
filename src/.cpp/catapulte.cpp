@@ -48,7 +48,7 @@ Catapulte::Catapulte(QWidget *parent) :
     int w=webCam_->get(CV_CAP_PROP_FRAME_WIDTH);
     int h=webCam_->get(CV_CAP_PROP_FRAME_HEIGHT);
 
-    if(!webCam_->isOpened())  // check if we succeeded
+    if(!webCam_->isOpened())  // check if succeeded, disable start button if not
     {
         ui->Frame_->setText("Error openning the default camera !");
     }
@@ -72,6 +72,11 @@ Catapulte::~Catapulte()
     if(setting_ != NULL)
         delete setting_;
 }
+
+/*
+ * when start button clicked, display game setting dialog to input player name and select game level
+ * execute connect functions when game setting comfirmed
+ */
 
 void Catapulte::Start_Button__clicked()
 {
@@ -103,6 +108,10 @@ void Catapulte::Start_Button__clicked()
         started_ = false;
     }
 }
+
+/*
+ * When Capture Button clicked, create gameround instance and display its status
+ */
 
 void Catapulte::Capture_Button__clicked()
 {
@@ -146,6 +155,10 @@ void Catapulte::Capture_Button__clicked()
     ui->v_target_left_->setText(QString("%1").arg(round_->getR_left()));
     ui->v_scores_->setText(QString("%1").arg(round_->getSum_Scores()));
 }
+
+/*
+ * Same to Start_Button__clicked
+ */
 
 void Catapulte::Restart_Button__clicked()
 {
@@ -199,6 +212,11 @@ void Catapulte::Restart_Button__clicked()
     }
 }
 
+/*
+ * Executed when fire button clicked or "Fire" signal emitted, call drawAnime function to draw launch animation
+ * and add the result to the table widget
+ */
+
 void Catapulte::Fire_Button__clicked()
 {
     g_timer_->stop();
@@ -248,6 +266,10 @@ void Catapulte::Fire_Button__clicked()
     }
 }
 
+/*
+ * Prepare for the next target
+ */
+
 void Catapulte::Next_Button__clicked()
 {
     round_->Init_Round_Time();
@@ -263,6 +285,10 @@ void Catapulte::Next_Button__clicked()
     ui->Replay_Button_->setVisible(false);
     round_->generatePostion();
 }
+
+/*
+ * Replay the launch animation
+ */
 
 void Catapulte::Replay_Button__clicked()
 {
@@ -287,6 +313,10 @@ void Catapulte::GameSetting_Rejected()
 {
     started_ = false;
 }
+
+/*
+ * Display the camera image, follow the template image when captured_ is true
+ */
 
 void Catapulte::afficherImage()
 {
@@ -317,7 +347,7 @@ void Catapulte::afficherImage()
             double minVal; double maxVal; Point minLoc; Point maxLoc;
             minMaxLoc( resultImage, &minVal, &maxVal, &minLoc, &maxLoc, Mat() );
 //            qDebug()<<maxLoc.y - last_Pos_.y;
-            if(maxLoc.y - last_Pos_.y > 100 && !launched_ && round_->getR_left() != 0) emit launch();
+            if(maxLoc.y - last_Pos_.y > 100 && maxLoc.y - last_Pos_.y < 150 && !launched_ && round_->getR_left() != 0) emit launch();
             last_Pos_ = maxLoc;
             if(!launched_)
             {
@@ -341,11 +371,19 @@ void Catapulte::afficherImage()
     }
 }
 
+/*
+ * Display the total play time
+ */
+
 void Catapulte::afficherGlobalTime()
 {
     runtime_ = runtime_.addSecs(1);// +1s
     ui->v_runtime_->setText(runtime_.toString());
 }
+
+/*
+ * Display the current round play time
+ */
 
 void Catapulte::afficherRoundTime()
 {

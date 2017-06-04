@@ -3,6 +3,10 @@
 
 #include <QtMath>
 
+/*
+ * This class is used to record the status parameters of the catapult like horizontal angle and vertical angle etc...
+ */
+
 class CatapulteStatus
 {
 
