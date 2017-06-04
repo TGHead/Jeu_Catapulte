@@ -50,7 +50,7 @@ void GameRound::Round_Time_add1s()
 
 void GameRound::calculScore(double d)
 {
-//    qDebug()<<"d:"<<d;
+
     switch (level_) {
     case EASY:
         if(d <= 10.0)
@@ -71,6 +71,7 @@ void GameRound::calculScore(double d)
         }
         break;
     }
+
 }
 
 QString GameRound::getLevelText()
@@ -97,11 +98,29 @@ int GameRound::getSum_Scores()
     return sum;
 }
 /*
- * Generate the random position of the target with 80<x<135 and -35<y<35,only define the centre of the target
+ * Generate the random position of the target with -35<x<35 and 80<y<135,only define the centre of the target
+ * for the easy mode: between 80 to 100
+ * for the normal mode: between 100 to 120
+ * for the hard mode: between 120 to 135
  */
 void GameRound::generatePostion(){
     srand((unsigned)time(NULL));
-    po.x=rand()%70-35;
-    po.y=rand()%55+80;
+//    po.x=rand()%70-35;
+//    po.y=rand()%55+80;
+
+    switch (level_) {
+    case EASY:
+        po.x=rand()%70-35;
+        po.y=rand()%20+80;
+        break;
+    case NORMAL:
+        po.x=rand()%70-35;
+        po.y=rand()%20+100;
+        break;
+    case HARD:
+        po.x=rand()%70-35;
+        po.y=rand()%15+120;
+        break;
+    }
 }
 
