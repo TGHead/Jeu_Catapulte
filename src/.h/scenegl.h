@@ -22,6 +22,16 @@ public:
     CatapulteStatus* getCatapulteStatus() {return catapult_status_;}// return the pointer of object catapult_status_
     void setCatapultAngle(float h, float v);// set catapult angle for display by calling functions setAngleH and setAngleTrebuchet of CatapulteStatus class
     void setRound(GameRound *R){round=R;}// associate GameRound pointer in the Catapulte class
+
+    /*
+     * 3 launch phase:
+     *
+     * 1: angle_trebuchet > 0, during this phase, the trebuchet arm is beginning to rotate but the projectile stays always on the ground
+     * 2: angle_trebuchet > -90, during this phase, the trebuchet arm begins to have the projectile rotate with itself together, the projectile leaves the ground and begins to rotate around the end of trebuchet arm
+     * 3: angle_trebuchet <= -90, during this phase, the trebuchet arm stops to rotate, and throws out the projectile, the projectile begins to a free fall drop with a horizontal velocity until it falls to the ground
+     *
+     */
+
     void drawAnime();//the principal function to display animation when "Fire" signal captured
     void setFiringFlag(bool flag) { firing_ = flag; }// set firing_ variable
 //    void cameraBackup();
